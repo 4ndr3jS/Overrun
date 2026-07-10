@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8757188319111990450, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -6454969007074664543, guid: 2a67b69c4a4f0dd488ae7367c02844d6, type: 3}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: ID
       value: 2
@@ -15,7 +19,7 @@ PrefabInstance:
     - target: {fileID: 2473605379936443261, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -4003982261762975687, guid: 22c90f33f2b511148b63217732152f80, type: 3}
+      objectReference: {fileID: -6454969007074664543, guid: 2a67b69c4a4f0dd488ae7367c02844d6, type: 3}
     - target: {fileID: 3194438793078092074, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -98,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6919786862831730576, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Name
-      value: Dynamite Variant
+      value: Shuriken Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
