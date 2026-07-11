@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     private Rigidbody2D rb;
     private Animator animator;
+    private bool playingFootsteps = false;
+    public float footstepInterval = 0.5f;
 
     void Awake()
     {
@@ -21,10 +23,20 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
             animator.SetBool("isWalking", false);
+            StopFootsteps();
             return;
         }
         rb.linearVelocity = moveInput * moveSpeed;
         animator.SetBool("isWalking", rb.linearVelocity.magnitude > 0);
+
+        if (rb.linearVelocity.magnitude > 0 && !playingFootsteps)
+        {
+            StartFootsteps();
+        }
+        else if(rb.linearVelocity.magnitude == 0)
+        {
+            StopFootsteps();
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -39,10 +51,28 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            
+
             animator.SetFloat("InputX", moveInput.x);
             animator.SetFloat("InputY", moveInput.y);
             lastMoveInput = moveInput;
         }
+    }
+
+    void StartFootsteps()
+    {
+        playingFootsteps = true;
+        InvokeRepeating(nameof(PlayFootstep), 0f, footstepInterval);
+        
+    }
+
+    void StopFootsteps()
+    {
+        playingFootsteps = false;
+        CancelInvoke(nameof(PlayFootstep));
+    }
+
+    void PlayFootstep()
+    {
+        SoundEffectManager.Play("Footstep");
     }
 }
