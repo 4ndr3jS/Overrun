@@ -23,7 +23,7 @@ public class InventoryController : MonoBehaviour
             if(slot != null && slot.currentItem == null)
             {
                 GameObject newItem = Instantiate(itemPrefab, slotTransform);
-                newItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                UIUtils.FitToParent(newItem.GetComponent<RectTransform>());
                 slot.currentItem = newItem;
                 return true;
             }
@@ -75,7 +75,7 @@ public class InventoryController : MonoBehaviour
             if (itemPrefab != null)
             {
                 GameObject item = Instantiate(itemPrefab, slot.transform);
-                item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                UIUtils.FitToParent(item.GetComponent<RectTransform>());
                 slot.currentItem = item;
             }
         }

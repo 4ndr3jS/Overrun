@@ -49,7 +49,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 dropSlot.currentItem.transform.SetParent(originalSlot.transform);
                 originalSlot.currentItem = dropSlot.currentItem;
-                dropSlot.currentItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                UIUtils.FitToParent(dropSlot.currentItem.GetComponent<RectTransform>());
             }
             else
             {
@@ -64,6 +64,6 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             transform.SetParent(originalParent);
         }
 
-        GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        UIUtils.FitToParent(GetComponent<RectTransform>());
     }
 }
