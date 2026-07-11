@@ -17,7 +17,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (PauseController.isGamePaused)
+        {
+            rb.linearVelocity = Vector2.zero;
+            animator.SetBool("isWalking", false);
+            return;
+        }
         rb.linearVelocity = moveInput * moveSpeed;
+        animator.SetBool("isWalking", rb.linearVelocity.magnitude > 0);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -32,7 +39,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            animator.SetBool("isWalking", true);
+            
             animator.SetFloat("InputX", moveInput.x);
             animator.SetFloat("InputY", moveInput.y);
             lastMoveInput = moveInput;
