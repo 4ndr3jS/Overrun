@@ -8,7 +8,7 @@ public class Chest : MonoBehaviour, IInteractable
     public GameObject itemPrefab;
     public Sprite openedSprite;
 
-    void Start()
+    void Awake()
     {
         ChestID ??= PublicHelper.GenerateUniqueID(gameObject);
     }

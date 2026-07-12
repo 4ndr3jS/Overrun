@@ -13,6 +13,7 @@ public class Item : MonoBehaviour
 
     private void Awake()
     {
+        isCollected = false;
         quantityText = GetComponentInChildren<TMP_Text>();
         UpdateQuantityDisplay();
     }

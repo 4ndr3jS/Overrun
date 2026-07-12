@@ -123,6 +123,7 @@ MonoBehaviour:
   ID: 1
   Name: BOMB
   quantity: 1
+  isCollected: 0
   quantityText: {fileID: 8444439744813356879}
 --- !u!212 &-8757188319111990450
 SpriteRenderer:

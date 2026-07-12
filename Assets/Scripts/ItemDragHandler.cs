@@ -12,10 +12,22 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private InventoryController inventoryController;
 
+    private Collider2D dropBoundary;
+
     void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         inventoryController = InventoryController.Instance;
+
+        GameObject boundaryObject = GameObject.FindGameObjectWithTag("DropBoundary");
+        if(boundaryObject != null)
+        {
+            dropBoundary = boundaryObject.GetComponent<Collider2D>();
+        }
+        else
+        {
+            Debug.Log("No tagged DropBoundary found.");
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -134,8 +146,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
-        Vector2 dropOffset = Random.insideUnitCircle.normalized * Random.Range(minDropDistance, maxDropDistance);
-        Vector2 dropPosition = (Vector2)playerTransform.position + dropOffset;
+        Vector2 dropPosition = GetValidDropPos(playerTransform.position);
         
         GameObject dropItem = Instantiate(gameObject, dropPosition, Quaternion.identity);
         Item droppedItem = dropItem.GetComponent<Item>();
@@ -147,6 +158,31 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             Destroy(gameObject);
         }
     }
+    
+    private Vector2 GetValidDropPos(Vector2 origin)
+    {
+        const int maxAttempts = 8;
+        for(int i = 0; i < maxAttempts; i++)
+        {
+            Vector2 offset = Random.insideUnitCircle.normalized * Random.Range(minDropDistance, maxDropDistance);
+            Vector2 candidate = origin + offset;
+
+            if(dropBoundary == null || dropBoundary.OverlapPoint(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        if(dropBoundary != null)
+        {
+            Vector2 closest = dropBoundary.ClosestPoint(origin + (Vector2)(Random.insideUnitCircle * minDropDistance));
+            Vector2 inward = (origin - closest).normalized * 0.2f;
+            return closest + inward;
+        }
+
+        return origin;
+    }
+
 
     public void OnPointerClick(PointerEventData eventData)
     {
