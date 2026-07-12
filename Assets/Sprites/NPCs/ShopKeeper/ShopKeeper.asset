@@ -10,26 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7c7cd98a451c7f4d801c8715a276a9f, type: 3}
-  m_Name: OldManDialogue
+  m_Name: ShopKeeper
   m_EditorClassIdentifier: Assembly-CSharp::NPCDialogue
-  npcName: Old Man
-  npcPortait: {fileID: -7527145504033472756, guid: 524df65bf2cd3a64396fc2bd3fcd1b75, type: 3}
+  npcName: Shop Keeper
+  npcPortait: {fileID: 4723107735738678597, guid: 207df7dbc81b4b44cba80f42dcbdecdf, type: 3}
   dialogueLines:
-  - Hello there! I am the old man of this town
-  - You seem pretty capable of fighting. Do you mind helping me?
-  - Thanks
-  - I knew you are a good man!
-  - Oh... ok...
-  - Next time maybe...
+  - Heya! I run this little shop.
+  - Interested in buying something?
   autoProgressLines: 0100
-  endDialogueLines: 000000010001
+  endDialogueLines: 0000
   autoProgressDelay: 1.5
   speakSpeed: 0.05
   voiceSound: {fileID: 8300000, guid: e7ddacf926d665c4c92ba6ada87dcde1, type: 3}
   voicePitch: 0.8
-  choices:
-  - dialogueIndex: 1
-    choices:
-    - Yes
-    - No, sorry
-    nextDialogueIndexes: 0200000004000000
+  choices: []
