@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private bool playingFootsteps = false;
     public float footstepInterval = 0.5f;
     public static bool allowTurnWhilePaused = false;
+    private PlayerInput playerInput;
 
     [Header("Footstep surface detection")]
     public Tilemap groundTilemap;
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     void FixedUpdate()
@@ -56,6 +58,29 @@ public class PlayerController : MonoBehaviour
             return;
 
         moveInput = context.ReadValue<Vector2>();
+        if (moveInput == Vector2.zero)
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", lastMoveInput.x);
+            animator.SetFloat("LastInputY", lastMoveInput.y);
+        }
+        else
+        {
+
+            animator.SetFloat("InputX", moveInput.x);
+            animator.SetFloat("InputY", moveInput.y);
+            lastMoveInput = moveInput;
+        }
+    }
+
+    public void ResyncMoveInput()
+    {
+        if (playerInput == null)
+            return;
+
+        InputAction moveAction = playerInput.actions["Move"];
+        moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+
         if (moveInput == Vector2.zero)
         {
             animator.SetBool("isWalking", false);

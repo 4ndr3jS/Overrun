@@ -65,18 +65,21 @@ public class MapTransition : MonoBehaviour
     {
         PauseController.SetPause(true);
         
-
         if (ScreenFader.Instance != null)
             yield return ScreenFader.Instance.FadeOut(fadeOutDuration);
 
         TeleportPlayer(player);
-        PlayerController.allowTurnWhilePaused = true;
 
+        PlayerController.allowTurnWhilePaused = true;
 
         if (ScreenFader.Instance != null)
             yield return ScreenFader.Instance.FadeIn(fadeInDuration);
+
         PlayerController.allowTurnWhilePaused = false;
+
         PauseController.SetPause(false);
+
+        player.GetComponent<PlayerController>()?.ResyncMoveInput();
     }
 
     public void TeleportPlayer(Transform player)
@@ -112,7 +115,6 @@ public class MapTransition : MonoBehaviour
     private void ApplyInteractionRadius(Transform player)
     {
         InteractionDetector detector = player.GetComponentInChildren<InteractionDetector>();
-
         if (detector == null)
             return;
 
