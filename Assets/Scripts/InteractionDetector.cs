@@ -5,10 +5,32 @@ public class InteractionDetector : MonoBehaviour
 {
     private IInteractable interactableInRange = null;
     public GameObject interactionIcon;
+    private CircleCollider2D interactionCollider;
+    private float defaultRadius;
+    
+    void Awake()
+    {
+        interactionCollider = GetComponent<CircleCollider2D>();
+
+        if(interactionCollider != null)
+            defaultRadius = interactionCollider.radius;
+    }
 
     void Start()
     {
         interactionIcon.SetActive(false);
+    }
+
+    public void SetInteractionRadius(float radius)
+    {
+        if(interactionCollider != null)
+            interactionCollider.radius = radius;
+    }
+
+    public void ResetInteractionRadius()
+    {
+        if (interactionCollider != null)
+            interactionCollider.radius = defaultRadius;
     }
 
     public void OnInteract(InputAction.CallbackContext context)

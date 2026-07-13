@@ -14,6 +14,9 @@ public class MapTransition : MonoBehaviour
     public CinemachineCamera cmCamera;
     public CinemachineConfiner2D confiner;
 
+    [Header("Interaction")]
+    public float interactionRadiusOverride = 0f;
+
     private Collider2D myCollider;
     private bool ignoreTrigger = false;
     private Transform ignoredPlayer;
@@ -78,7 +81,22 @@ public class MapTransition : MonoBehaviour
             cmCamera.OnTargetObjectWarped(player, delta);
         }
 
+        ApplyInteractionRadius(player);
+
         DoorA.ArmIgnore(player);
+    }
+
+    private void ApplyInteractionRadius(Transform player)
+    {
+        InteractionDetector detector = player.GetComponentInChildren<InteractionDetector>();
+
+        if (detector == null)
+            return;
+
+        if (DoorA.interactionRadiusOverride > 0f)
+            detector.SetInteractionRadius(DoorA.interactionRadiusOverride);
+        else
+            detector.ResetInteractionRadius();
     }
 
     private void ArmIgnore(Transform player)
