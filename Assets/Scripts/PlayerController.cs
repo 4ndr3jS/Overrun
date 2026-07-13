@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private bool playingFootsteps = false;
     public float footstepInterval = 0.5f;
+
+    [Header("Footstep surface detection")]
+    public Tilemap groundTilemap;
+    public Tilemap carpetTilemap;
+    public TileBase[] grassTiles;
+    public TileBase[] floorTiles;
+    public TileBase[] carpetTiles;
 
     void Awake()
     {
@@ -73,6 +81,44 @@ public class PlayerController : MonoBehaviour
 
     void PlayFootstep()
     {
-        SoundEffectManager.Play("Footstep", true);
+        string soundName = GetFootstepSound();
+        SoundEffectManager.Play(soundName, true);
+    }
+
+    private string GetFootstepSound()
+    {
+        if(carpetTilemap != null)
+        {
+            Vector3Int carpetCell = carpetTilemap.WorldToCell(transform.position);
+            TileBase carpetTile = carpetTilemap.GetTile(carpetCell);
+
+            if (ContainsTile(carpetTiles, carpetTile))
+                return "FootstepCarpet";
+        }
+
+        if (groundTilemap == null)
+            return "Footstep";
+
+        Vector3Int cellPos = groundTilemap.WorldToCell(transform.position);
+        TileBase tile = groundTilemap.GetTile(cellPos);
+
+        if (ContainsTile(grassTiles, tile))
+            return "Footstep";
+
+        return "FootstepFloor";
+    }
+
+    private bool ContainsTile(TileBase[] tileSet, TileBase tile)
+    {
+        if (tileSet == null)
+            return false;
+        
+        foreach(TileBase t in tileSet)
+        {
+            if (t == tile)
+                return true;
+        }
+
+        return false;
     }
 }
