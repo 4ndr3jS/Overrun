@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private bool playingFootsteps = false;
     public float footstepInterval = 0.5f;
+    public static bool allowTurnWhilePaused = false;
 
     [Header("Footstep surface detection")]
     public Tilemap groundTilemap;
@@ -31,6 +32,8 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
             animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", lastMoveInput.x);
+            animator.SetFloat("LastInputY", lastMoveInput.y);
             StopFootsteps();
             return;
         }
@@ -49,8 +52,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
+        if (PauseController.isGamePaused && !allowTurnWhilePaused)
+            return;
 
+        moveInput = context.ReadValue<Vector2>();
         if (moveInput == Vector2.zero)
         {
             animator.SetBool("isWalking", false);

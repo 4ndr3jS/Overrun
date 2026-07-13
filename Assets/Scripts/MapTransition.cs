@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using System.Collections;
 
 public class MapTransition : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class MapTransition : MonoBehaviour
 
     [Header("Interaction")]
     public float interactionRadiusOverride = 0f;
+
+    [Header("Transition")]
+    public float fadeOutDuration = 0.5f;
+    public float fadeInDuration = 0.5f;
 
     private Collider2D myCollider;
     private bool ignoreTrigger = false;
@@ -40,7 +45,7 @@ public class MapTransition : MonoBehaviour
             return;
         }
 
-        TeleportPlayer(other.transform);
+        StartCoroutine(TeleportWithFade(other.transform));
     }
     
     private void Update()
@@ -54,6 +59,24 @@ public class MapTransition : MonoBehaviour
                 ignoredPlayer = null;
             }
         }
+    }
+
+    private IEnumerator TeleportWithFade(Transform player)
+    {
+        PauseController.SetPause(true);
+        
+
+        if (ScreenFader.Instance != null)
+            yield return ScreenFader.Instance.FadeOut(fadeOutDuration);
+
+        TeleportPlayer(player);
+        PlayerController.allowTurnWhilePaused = true;
+
+
+        if (ScreenFader.Instance != null)
+            yield return ScreenFader.Instance.FadeIn(fadeInDuration);
+        PlayerController.allowTurnWhilePaused = false;
+        PauseController.SetPause(false);
     }
 
     public void TeleportPlayer(Transform player)
