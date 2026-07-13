@@ -28,13 +28,17 @@ public class SaveController : MonoBehaviour
 
     public void saveGame()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        InteractionDetector intDetector = player.GetComponentInChildren<InteractionDetector>();
+
         SaveData saveData = new SaveData
         {
-            playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position,
+            playerPosition = player.transform.position,
             mapBoundary = FindAnyObjectByType<CinemachineConfiner2D>().BoundingShape2D.gameObject.name,
             inventorySaveData = inventoryController.GetInventoryItems(),
             hotbarSaveData = hotbarController.GetHotbarItems(),
-            chestSaveData = GetChestsState()
+            chestSaveData = GetChestsState(),
+            interactionRadius = intDetector != null ? intDetector.GetInteractionRadius() : 1f
         };
 
         File.WriteAllText(saveLocation, JsonUtility.ToJson(saveData));
@@ -62,8 +66,9 @@ public class SaveController : MonoBehaviour
         if (File.Exists(saveLocation)) {
             string json = File.ReadAllText(saveLocation);
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-            GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
+            player.transform.position = saveData.playerPosition;
 
             FindAnyObjectByType<CinemachineConfiner2D>().BoundingShape2D = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
 
@@ -71,6 +76,10 @@ public class SaveController : MonoBehaviour
             hotbarController.SetHotbarItems(saveData.hotbarSaveData);
 
             LoadChestStates(saveData.chestSaveData);
+
+            InteractionDetector intDetector = player.GetComponentInChildren<InteractionDetector>();
+            if (intDetector != null)
+                intDetector.SetInteractionRadius(saveData.interactionRadius > 0f ? saveData.interactionRadius : 1f);
         }
         else
         {

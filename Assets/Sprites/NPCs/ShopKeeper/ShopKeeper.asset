@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShopKeeper
   m_EditorClassIdentifier: Assembly-CSharp::NPCDialogue
   npcName: Shop Keeper
-  npcPortait: {fileID: 4723107735738678597, guid: 207df7dbc81b4b44cba80f42dcbdecdf, type: 3}
+  npcPortait: {fileID: -7527145504033472756, guid: 9ec943fd65273374e9aa6f1ad32eaa4c, type: 3}
   dialogueLines:
   - Heya! I run this little shop.
   - Interested in buying something?

@@ -21,6 +21,11 @@ public class InteractionDetector : MonoBehaviour
         interactionIcon.SetActive(false);
     }
 
+    public float GetInteractionRadius()
+    {
+        return interactionCollider != null ? interactionCollider.radius : defaultRadius;
+    }
+
     public void SetInteractionRadius(float radius)
     {
         if(interactionCollider != null)
