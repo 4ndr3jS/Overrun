@@ -2,6 +2,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopController : MonoBehaviour
 {
@@ -53,6 +54,9 @@ public class ShopController : MonoBehaviour
         shopPanel.SetActive(true);
         if (shopTitleText != null)
             shopTitleText.text = shop.shopKeeperName + "'s shop";
+
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(shopPanel.GetComponent<RectTransform>());
 
         RefreshShopDisplay();
         RefreshPlayerInvDisplay();
@@ -106,6 +110,9 @@ public class ShopController : MonoBehaviour
     private void CreateShopSlot(Transform grid, int itemID, int quantity, bool isShop, Slot originalSlot = null)
     {
         GameObject slotObj = Instantiate(shopSlotPrefab, grid);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(grid.GetComponent<RectTransform>());
+
         GameObject itemPrefab = itemDictionary.GetItemPrefab(itemID);
         if (itemPrefab == null)
             return;
@@ -124,5 +131,34 @@ public class ShopController : MonoBehaviour
         ShopSlot slot = slotObj.GetComponent<ShopSlot>();
         slot.isShopSlot = isShop;
         slot.SetItem(itemInstance, price);
+
+        ItemDragHandler dragHandler = itemInstance.GetComponent<ItemDragHandler>();
+        if (dragHandler)
+            dragHandler.enabled = false;
+
+        ShopItemHandler handler = itemInstance.AddComponent<ShopItemHandler>();
+        handler.Initialise(isShop);
+        if (!isShop)
+            handler.originalInvSlot = originalSlot;
+    }
+
+    public void AddItemToShop(int itemID, int quantity)
+    {
+        if (!currentShop)
+            return;
+
+        currentShop.AddToStock(itemID, quantity);
+        RefreshShopDisplay();
+    }
+
+    public bool RemoveItemFromShop(int itemID, int quantity)
+    {
+        if (!currentShop)
+            return false;
+
+        bool success = currentShop.RemoveFromShopStock(itemID, quantity);
+        if (success)
+            RefreshShopDisplay();
+        return success;
     }
 }

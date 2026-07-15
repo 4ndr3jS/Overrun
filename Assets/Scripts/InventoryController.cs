@@ -123,15 +123,42 @@ public class InventoryController : MonoBehaviour
         }
     }
 
+    public void RebuildItemCounts()
+    {
+        foreach(Transform slotTransform in inventoryPanel.transform)
+        {
+            Slot slot = slotTransform.GetComponent<Slot>();
+            if (slot == null || slot.currentItem == null)
+                continue;
+
+            Item item = slot.currentItem.GetComponent<Item>();
+
+            if(item == null)
+            {
+                slot.currentItem = null;
+                return;
+            }
+
+            if(item.quantity <= 0)
+            {
+                Destroy(slot.currentItem);
+                slot.currentItem = null;
+                continue;
+            }
+            item.UpdateQuantityDisplay();
+        }
+        RefreshAllItems();
+    }
+
     public void RefreshAllItems()
     {
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryPanel.GetComponent<RectTransform>());
-        
-        foreach(Transform slotTransform in inventoryPanel.transform)
+
+        foreach (Transform slotTransform in inventoryPanel.transform)
         {
             Slot slot = slotTransform.GetComponent<Slot>();
-            if(slot != null && slot.currentItem != null)
+            if (slot != null && slot.currentItem != null)
             {
                 UIUtils.FitAndPreserveAspectRatio(slot.currentItem.GetComponent<RectTransform>(), 15f);
             }
