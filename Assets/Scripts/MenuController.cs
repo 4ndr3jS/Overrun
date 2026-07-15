@@ -30,6 +30,10 @@ public class MenuController : MonoBehaviour
             {
                 playerController?.ResyncMoveInput();
             }
+            else
+            {
+                InventoryController.Instance?.RefreshAllItems();
+            }
         }
     }
 }

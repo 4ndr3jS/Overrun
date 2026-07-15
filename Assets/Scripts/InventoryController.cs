@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class InventoryController : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class InventoryController : MonoBehaviour
             if(slot != null && slot.currentItem == null)
             {
                 GameObject newItem = Instantiate(itemPrefab, slotTransform);
-                UIUtils.FitToParent(newItem.GetComponent<RectTransform>(), 15f);
+                UIUtils.FitAndPreserveAspectRatio(newItem.GetComponent<RectTransform>(), 15f);
                 slot.currentItem = newItem;
                 return true;
             }
@@ -108,7 +109,7 @@ public class InventoryController : MonoBehaviour
             if (itemPrefab != null)
             {
                 GameObject item = Instantiate(itemPrefab, slot.transform);
-                UIUtils.FitToParent(item.GetComponent<RectTransform>(), 15f);
+                UIUtils.FitAndPreserveAspectRatio(item.GetComponent<RectTransform>(), 15f);
 
                 Item itemComponent = item.GetComponent<Item>();
                 if (itemComponent != null && data.quantity > 1)
@@ -118,6 +119,21 @@ public class InventoryController : MonoBehaviour
                 }
 
                 slot.currentItem = item;
+            }
+        }
+    }
+
+    public void RefreshAllItems()
+    {
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(inventoryPanel.GetComponent<RectTransform>());
+        
+        foreach(Transform slotTransform in inventoryPanel.transform)
+        {
+            Slot slot = slotTransform.GetComponent<Slot>();
+            if(slot != null && slot.currentItem != null)
+            {
+                UIUtils.FitAndPreserveAspectRatio(slot.currentItem.GetComponent<RectTransform>(), 15f);
             }
         }
     }

@@ -64,7 +64,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if(dropSlot == originalSlot || (dropSlot != null && dropSlot.currentItem == gameObject))
         {
             transform.SetParent(originalParent);
-            UIUtils.FitToParent(GetComponent<RectTransform>());
+            UIUtils.FitAndPreserveAspectRatio(GetComponent<RectTransform>());
             return;
         }
 
@@ -86,11 +86,11 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 {
                     dropSlot.currentItem.transform.SetParent(originalSlot.transform);
                     originalSlot.currentItem = dropSlot.currentItem;
-                    UIUtils.FitToParent(dropSlot.currentItem.GetComponent<RectTransform>());
+                    UIUtils.FitAndPreserveAspectRatio(dropSlot.currentItem.GetComponent<RectTransform>());
 
                     transform.SetParent(dropSlot.transform);
                     dropSlot.currentItem = gameObject;
-                    UIUtils.FitToParent(GetComponent<RectTransform>());
+                    UIUtils.FitAndPreserveAspectRatio(GetComponent<RectTransform>());
                 }
             }
 
@@ -100,7 +100,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
                 transform.SetParent(dropSlot.transform);
                 dropSlot.currentItem = gameObject;
-                UIUtils.FitToParent(GetComponent<RectTransform>());
+                UIUtils.FitAndPreserveAspectRatio(GetComponent<RectTransform>());
             }
         }
         else
@@ -114,7 +114,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             else
             {
                 transform.SetParent(originalParent);
-                UIUtils.FitToParent(GetComponent<RectTransform>());
+                UIUtils.FitAndPreserveAspectRatio(GetComponent<RectTransform>());
             }
         }
     }
@@ -135,7 +135,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             item.RemoveFromStack();
 
             transform.SetParent(originalParent);
-            UIUtils.FitToParent(GetComponent<RectTransform>());
+            UIUtils.FitAndPreserveAspectRatio(GetComponent<RectTransform>());
 
             quantity = 1;
         }
@@ -223,7 +223,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 slot.currentItem = newItem;
                 newItem.transform.SetParent(slot.transform);
-                UIUtils.FitToParent(newItem.GetComponent<RectTransform>());
+                UIUtils.FitAndPreserveAspectRatio(newItem.GetComponent<RectTransform>());
                 return;
             }
         }

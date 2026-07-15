@@ -111,7 +111,7 @@ public class ShopController : MonoBehaviour
             return;
 
         GameObject itemInstance = Instantiate(itemPrefab, slotObj.transform);
-        UIUtils.FitToParent(itemInstance.GetComponent<RectTransform>(), 15f);
+        UIUtils.FitAndPreserveAspectRatio(itemInstance.GetComponent<RectTransform>(), 15f);
 
         Item item = itemInstance.GetComponent<Item>();
         item.quantity = quantity;

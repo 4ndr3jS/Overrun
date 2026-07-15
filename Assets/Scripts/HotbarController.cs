@@ -86,7 +86,7 @@ public class HotbarController : MonoBehaviour
             if (itemPrefab != null)
             {
                 GameObject item = Instantiate(itemPrefab, slot.transform);
-                UIUtils.FitToParent(item.GetComponent<RectTransform>());
+                UIUtils.FitAndPreserveAspectRatio(item.GetComponent<RectTransform>());
                 slot.currentItem = item;
             }
         }
