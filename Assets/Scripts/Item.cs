@@ -71,4 +71,14 @@ public class Item : MonoBehaviour
             ItemPickerUIController.Instance.ShowItemPickup(Name, itemIcon);
         }
     }
+
+    public void SetQuantityTextStyle(Vector2 anchoredPosition, float fontSize)
+    {
+        if (quantityText == null)
+            return;
+
+        RectTransform rt = quantityText.GetComponent<RectTransform>();
+        rt.anchoredPosition = anchoredPosition;
+        quantityText.fontSize = fontSize;
+    }
 }

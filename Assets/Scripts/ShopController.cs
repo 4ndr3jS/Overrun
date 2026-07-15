@@ -16,6 +16,10 @@ public class ShopController : MonoBehaviour
     private ItemDictionary itemDictionary;
     private ShopNPC currentShop;
 
+    [Header("Shop Slot Item Override")]
+    public Vector2 shopQuantityTextPosition = new Vector2(18f, -18f);
+    public float shopQuantityTextFontSize = 12f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -112,6 +116,8 @@ public class ShopController : MonoBehaviour
         Item item = itemInstance.GetComponent<Item>();
         item.quantity = quantity;
         item.UpdateQuantityDisplay();
+
+        item.SetQuantityTextStyle(shopQuantityTextPosition, shopQuantityTextFontSize);
 
         int price = isShop ? item.buyPrice : item.GetSellPrice();
 

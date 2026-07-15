@@ -61,6 +61,13 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         Slot originalSlot = originalParent.GetComponent<Slot>();
 
+        if(dropSlot == originalSlot || (dropSlot != null && dropSlot.currentItem == gameObject))
+        {
+            transform.SetParent(originalParent);
+            UIUtils.FitToParent(GetComponent<RectTransform>());
+            return;
+        }
+
         // to chekc if we are dropping on a slot
         if(dropSlot != null)
         {
