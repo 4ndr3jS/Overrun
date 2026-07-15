@@ -11,11 +11,20 @@ public class Item : MonoBehaviour
 
     public TMP_Text quantityText;
 
+    public int buyPrice = 100;
+    [Range(0, 1)]
+    public float sellPriceMultiplier = 0.5f; 
+
     private void Awake()
     {
         isCollected = false;
         quantityText = GetComponentInChildren<TMP_Text>();
         UpdateQuantityDisplay();
+    }
+
+    public int GetSellPrice()
+    {
+        return Mathf.RoundToInt(buyPrice * sellPriceMultiplier);
     }
 
     public void UpdateQuantityDisplay()
