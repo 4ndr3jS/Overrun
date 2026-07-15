@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ShopSlot : MonoBehaviour
 {
@@ -29,5 +30,17 @@ public class ShopSlot : MonoBehaviour
         currentItem = item;
         itemPrice = price;
         UpdatePriceDisplay();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log($"[ShopSlot] OnPointerClick on {gameObject.name}. currentItem = {(currentItem != null ? currentItem.name : "NULL")}");
+
+        if (currentItem == null)
+            return;
+
+        ShopItemHandler handler = currentItem.GetComponent<ShopItemHandler>();
+        Debug.Log($"[ShopSlot] handler found = {handler != null}");
+        handler?.OnPointerClick(eventData);
     }
 }

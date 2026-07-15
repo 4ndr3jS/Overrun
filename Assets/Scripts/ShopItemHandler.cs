@@ -11,7 +11,7 @@ public class ShopItemHandler : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Right || eventData.button == PointerEventData.InputButton.Left)
         {
             if (isShopItem)
                 BuyItem();
@@ -23,8 +23,8 @@ public class ShopItemHandler : MonoBehaviour, IPointerClickHandler
 
     private void BuyItem()
     {
-        Item item = GetComponent<Item>();
-        ShopSlot slot = GetComponentInParent<ShopSlot>();
+        Item item = GetComponentInChildren<Item>();
+        ShopSlot slot = GetComponent<ShopSlot>();
         if (!item || !slot)
             return;
 
@@ -49,8 +49,8 @@ public class ShopItemHandler : MonoBehaviour, IPointerClickHandler
 
     private void SellItem()
     {
-        Item item = GetComponent<Item>();
-        ShopSlot slot = GetComponentInParent<ShopSlot>();
+        Item item = GetComponentInChildren<Item>();
+        ShopSlot slot = GetComponent<ShopSlot>();
         if (!item || !slot || !originalInvSlot)
             return;
 

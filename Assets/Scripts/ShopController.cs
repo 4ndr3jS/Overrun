@@ -136,7 +136,10 @@ public class ShopController : MonoBehaviour
         if (dragHandler)
             dragHandler.enabled = false;
 
-        ShopItemHandler handler = itemInstance.AddComponent<ShopItemHandler>();
+        ShopItemHandler handler = slotObj.GetComponent<ShopItemHandler>();
+        if (handler == null)
+            handler = slotObj.AddComponent<ShopItemHandler>();
+
         handler.Initialise(isShop);
         if (!isShop)
             handler.originalInvSlot = originalSlot;

@@ -54,10 +54,16 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (PauseController.isGamePaused && !allowTurnWhilePaused)
-            return;
+        Vector2 newInput = context.ReadValue<Vector2>();
+        if(PauseController.isGamePaused && !allowTurnWhilePaused)
+        {
+            if (newInput == Vector2.zero)
+                moveInput = Vector2.zero;
 
-        moveInput = context.ReadValue<Vector2>();
+            return;
+        }
+
+        moveInput = newInput;
         if (moveInput == Vector2.zero)
         {
             animator.SetBool("isWalking", false);
@@ -66,7 +72,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-
             animator.SetFloat("InputX", moveInput.x);
             animator.SetFloat("InputY", moveInput.y);
             lastMoveInput = moveInput;
