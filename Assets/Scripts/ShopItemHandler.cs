@@ -39,7 +39,6 @@ public class ShopItemHandler : MonoBehaviour, IPointerClickHandler
         {
             CurrencyController.Instance.SpendCoins(slot.itemPrice);
             ShopController.Instance.RefreshPlayerInvDisplay();
-            ShopController.Instance.RemoveItemFromShop(item.ID, 1);
         }
         else
         {
@@ -70,6 +69,5 @@ public class ShopItemHandler : MonoBehaviour, IPointerClickHandler
         InventoryController.Instance.RebuildItemCounts();
         CurrencyController.Instance.AddCoins(slot.itemPrice);
         ShopController.Instance.RefreshPlayerInvDisplay();
-        ShopController.Instance.AddItemToShop(item.ID, 1);
     }
 }

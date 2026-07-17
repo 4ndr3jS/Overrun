@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class ShopController : MonoBehaviour
     public GameObject shopPanel;
     public Transform shopInventoryGrid, playerInventoryGrid;
     public GameObject shopSlotPrefab;
+    public GameObject playerSlotPrefab;
     public TMP_Text playerMoneyText, shopTitleText;
 
     private ItemDictionary itemDictionary;
@@ -78,14 +80,10 @@ public class ShopController : MonoBehaviour
         foreach (Transform child in shopInventoryGrid)
             Destroy(child.gameObject);
 
-        foreach(var stockItem in currentShop.GetCurrentStock())
+        foreach(int itemID in currentShop.GetCurrentStock())
         {
-            if (stockItem.quantity <= 0)
-                continue;
-
-            CreateShopSlot(shopInventoryGrid, stockItem.itemID, stockItem.quantity, true);
+            CreateShopSlot(shopInventoryGrid, itemID, 1, true);
         }
-
     }
 
     public void RefreshPlayerInvDisplay()
@@ -109,7 +107,8 @@ public class ShopController : MonoBehaviour
 
     private void CreateShopSlot(Transform grid, int itemID, int quantity, bool isShop, Slot originalSlot = null)
     {
-        GameObject slotObj = Instantiate(shopSlotPrefab, grid);
+        GameObject prefabToUse = isShop ? shopSlotPrefab : playerSlotPrefab;
+        GameObject slotObj = Instantiate(prefabToUse, grid);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(grid.GetComponent<RectTransform>());
 
@@ -118,8 +117,19 @@ public class ShopController : MonoBehaviour
             return;
 
         GameObject itemInstance = Instantiate(itemPrefab, slotObj.transform);
-        UIUtils.FitAndPreserveAspectRatio(itemInstance.GetComponent<RectTransform>(), 15f);
 
+        ShopSlot slot = slotObj.GetComponent<ShopSlot>();
+
+        Image itemInstanceImage = itemInstance.GetComponent<Image>();
+        bool slotHasIcon = slot != null && slot.itemIcon != null;
+        if (itemInstanceImage != null)
+        {
+            if (slotHasIcon)
+                itemInstanceImage.enabled = false;
+            else
+                UIUtils.FitAndPreserveAspectRatio(itemInstanceImage.GetComponent<RectTransform>(), 15f);
+        }
+            
         Item item = itemInstance.GetComponent<Item>();
         item.quantity = quantity;
         item.UpdateQuantityDisplay();
@@ -128,7 +138,6 @@ public class ShopController : MonoBehaviour
 
         int price = isShop ? item.buyPrice : item.GetSellPrice();
 
-        ShopSlot slot = slotObj.GetComponent<ShopSlot>();
         slot.isShopSlot = isShop;
         slot.SetItem(itemInstance, price);
 
@@ -143,25 +152,5 @@ public class ShopController : MonoBehaviour
         handler.Initialise(isShop);
         if (!isShop)
             handler.originalInvSlot = originalSlot;
-    }
-
-    public void AddItemToShop(int itemID, int quantity)
-    {
-        if (!currentShop)
-            return;
-
-        currentShop.AddToStock(itemID, quantity);
-        RefreshShopDisplay();
-    }
-
-    public bool RemoveItemFromShop(int itemID, int quantity)
-    {
-        if (!currentShop)
-            return false;
-
-        bool success = currentShop.RemoveFromShopStock(itemID, quantity);
-        if (success)
-            RefreshShopDisplay();
-        return success;
     }
 }

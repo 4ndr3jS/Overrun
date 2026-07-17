@@ -12,7 +12,6 @@ public class SaveController : MonoBehaviour
     private InventoryController inventoryController;
     private HotbarController hotbarController;
     private Chest[] chests;
-    private ShopNPC[] shops;
 
     void Start()
     {
@@ -26,7 +25,6 @@ public class SaveController : MonoBehaviour
         inventoryController = FindAnyObjectByType<InventoryController>();
         hotbarController = FindAnyObjectByType<HotbarController>();
         chests = FindObjectsByType<Chest>();
-        shops = FindObjectsByType<ShopNPC>();
     }
 
     public void saveGame()
@@ -43,36 +41,9 @@ public class SaveController : MonoBehaviour
             chestSaveData = GetChestsState(),
             interactionRadius = intDetector != null ? intDetector.GetInteractionRadius() : 1f,
             playerCoins = CurrencyController.Instance.GetCoins(),
-            shopStates = GetShopsStates()
         };
 
         File.WriteAllText(saveLocation, JsonUtility.ToJson(saveData));
-    }
-
-    private List<ShopInstanceData> GetShopsStates()
-    {
-        List<ShopInstanceData> shopStates = new List<ShopInstanceData>();
-
-        foreach (var shop in shops)
-        {
-            ShopInstanceData shopData = new ShopInstanceData
-            {
-                shopID = shop.ShopID,
-                stock = new List<ShopItemData>()
-            };
-
-            foreach(var stockItem in shop.GetCurrentStock())
-            {
-                shopData.stock.Add(new ShopItemData
-                {
-                    itemID = stockItem.itemID,
-                    quantity = stockItem.quantity
-                });
-            }
-            shopStates.Add(shopData);
-        }
-
-        return shopStates;
     }
 
     private List<ChestSaveData> GetChestsState()
@@ -108,7 +79,6 @@ public class SaveController : MonoBehaviour
 
             LoadChestStates(saveData.chestSaveData);
 
-            LoadShopStates(saveData.shopStates);
             CurrencyController.Instance.SetCoins(saveData.playerCoins);
 
             InteractionDetector intDetector = player.GetComponentInChildren<InteractionDetector>();
@@ -133,32 +103,6 @@ public class SaveController : MonoBehaviour
             if(chestSaveData != null)
             {
                 chest.SetOpened(chestSaveData.isOpened);
-            }
-        }
-    }
-
-    private void LoadShopStates(List<ShopInstanceData> shopStates)
-    {
-        if (shopStates == null)
-            return;
-
-        foreach(var shop in shops)
-        {
-            ShopInstanceData shopData = shopStates.FirstOrDefault(s => s.shopID == shop.ShopID);
-
-            if(shopData != null)
-            {
-                List<ShopNPC.ShopStockItem> loadedStock = new List<ShopNPC.ShopStockItem>();
-
-                foreach(var itemData in shopData.stock)
-                {
-                    loadedStock.Add(new ShopNPC.ShopStockItem{
-                        itemID = itemData.itemID,
-                        quantity = itemData.quantity
-                    });
-                }
-
-                shop.SetStock(loadedStock);
             }
         }
     }

@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 90827753512560391, guid: f6faf64d6f2310f4fbf5ee3ac88b5c44, type: 3}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: ID
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: Name
@@ -23,6 +23,10 @@ PrefabInstance:
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: buyPrice
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: Description
+      value: A very sharp axe!
       objectReference: {fileID: 0}
     - target: {fileID: 2473605379936443261, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Sprite
