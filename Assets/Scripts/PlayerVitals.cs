@@ -41,7 +41,6 @@ public class PlayerVitals : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
-        Debug.Log("Health is now: " + currentHealth + " / " + maxHealth);
         OnHealthChange?.Invoke(currentHealth, maxHealth);
     }
 

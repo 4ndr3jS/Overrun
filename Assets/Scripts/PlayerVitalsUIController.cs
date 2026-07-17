@@ -13,6 +13,18 @@ public class PlayerVitalsUIController : MonoBehaviour
     {
         if(PlayerVitals.Instance != null)
         {
+            PlayerVitals.Instance.OnHealthChange += HandleHealthChange;
+            PlayerVitals.Instance.OnStaminaChange += HandleStaminaChange;
+
+            HandleHealthChange(PlayerVitals.Instance.GetHealth(), 100f);
+            HandleStaminaChange(PlayerVitals.Instance.GetStamina(), 100f);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (PlayerVitals.Instance != null)
+        {
             PlayerVitals.Instance.OnHealthChange -= HandleHealthChange;
             PlayerVitals.Instance.OnStaminaChange -= HandleStaminaChange;
         }
