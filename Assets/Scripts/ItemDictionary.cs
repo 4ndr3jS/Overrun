@@ -15,12 +15,6 @@ public class ItemDictionary : MonoBehaviour
         {
             if (item == null)
                 continue;
-
-            if (itemDictionary.ContainsKey(item.ID))
-            {
-                Debug.LogError($"[ItemDictionary] duplicate item ID {item.ID} on '{item.name}'" + $"and '{itemDictionary[item.ID].name}'. Please work");
-            }
-
             itemDictionary[item.ID] = item.gameObject;
         }
     }

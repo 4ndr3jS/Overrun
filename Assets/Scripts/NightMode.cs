@@ -50,10 +50,13 @@ public class NightMode : MonoBehaviour
         if (nightOverlay == null)
             return;
 
+        if (!nightOverlay.gameObject.activeSelf)
+            nightOverlay.gameObject.SetActive(true);
+
         if (fadeRoutine != null)
             StopCoroutine(fadeRoutine);
 
-        fadeRoutine = nightOverlay.StartCoroutine(FadeOverlay(targetAlpha));
+        fadeRoutine = StartCoroutine(FadeOverlay(targetAlpha));
     }
 
     private IEnumerator FadeOverlay(float targetAlpha)

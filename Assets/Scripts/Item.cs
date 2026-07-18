@@ -21,6 +21,10 @@ public class Item : MonoBehaviour
     [Range(0, 1)]
     public float sellPriceMultiplier = 0.5f;
 
+    [Header("Holding")]
+    public bool isHoldable = false;
+    public Sprite heldSprite;
+
     private Image iconImage;
 
     private void Awake()
