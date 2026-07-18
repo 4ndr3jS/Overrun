@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 3962845417410571583}
   - component: {fileID: 7290852232898252278}
   - component: {fileID: 8185614393562371769}
+  - component: {fileID: 1315568651113376991}
+  - component: {fileID: 2766364995704566821}
   m_Layer: 0
   m_Name: Monster
   m_TagString: Untagged
@@ -220,3 +222,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YSort
   sortingPrecision: 100
+--- !u!114 &1315568651113376991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334008841247552969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5614da2c8303584b93720465bd3846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHelath
+  maxHealth: 50
+  flashColor: {r: 0.9245283, g: 0.056692798, b: 0.056692798, a: 0.9411765}
+  flashDuration: 0.15
+  deathFlickerCount: 3
+  deathFlickerInterval: 0.08
+--- !u!114 &2766364995704566821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334008841247552969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a11b957df23924c95bc54c90385df5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlash
+  flashMaterial: {fileID: 2100000, guid: 037c4f915e5b0714a8153c47b114fd99, type: 2}
+  originalMaterial: {fileID: 0}
