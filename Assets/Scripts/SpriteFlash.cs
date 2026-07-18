@@ -43,7 +43,6 @@ public class SpriteFlash : MonoBehaviour
             StopCoroutine(flashRoutine);
             ResetVisuals();
         }
-            
 
         flashRoutine = StartCoroutine(DeathFlickerRoutine(flickerCount, flickerInterval, onComplete));
     }

@@ -18,6 +18,9 @@ public class PlayerVitals : MonoBehaviour
 
     public event Action<float, float> OnHealthChange;
     public event Action<float, float> OnStaminaChange;
+    public event Action OnDeath;
+
+    private bool isDead = false;
 
     private void Awake()
     {
@@ -40,9 +43,28 @@ public class PlayerVitals : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        if (isDead || amount <= 0f)
+            return;
+
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
         OnHealthChange?.Invoke(currentHealth, maxHealth);
+
+        if (currentHealth <= 0f)
+        {
+            isDead = true;
+            OnDeath?.Invoke();
+        }
+            
     }
+
+    public void Revive(float reviveHealth = -1f)
+    {
+        isDead = false;
+        currentHealth = reviveHealth > 0f ? Mathf.Clamp(reviveHealth, 0f, maxHealth) : maxHealth;
+        OnHealthChange?.Invoke(currentHealth, maxHealth);
+    }
+
+    public bool IsDead() => isDead;
 
     public bool UseStamina(float amount)
     {

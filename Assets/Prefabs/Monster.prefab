@@ -237,8 +237,8 @@ MonoBehaviour:
   maxHealth: 50
   flashColor: {r: 0.9245283, g: 0.056692798, b: 0.056692798, a: 0.9411765}
   flashDuration: 0.15
-  deathFlickerCount: 3
-  deathFlickerInterval: 0.08
+  deathFlickerCount: 4
+  deathFlickerInterval: 0.06
 --- !u!114 &2766364995704566821
 MonoBehaviour:
   m_ObjectHideFlags: 0
