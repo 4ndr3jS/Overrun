@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ID: 1
-  Name: BOMB
-  Description: This bomb explodes very loudly!
+  Name: Bomb
+  Description: This   bomb   explodes   very   loudly!
   quantity: 1
   isCollected: 0
   quantityText: {fileID: 8444439744813356879}

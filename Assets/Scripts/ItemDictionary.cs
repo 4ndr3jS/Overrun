@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using NUnit.Framework.Internal.Execution;
 
 public class ItemDictionary : MonoBehaviour
 {
@@ -10,16 +11,16 @@ public class ItemDictionary : MonoBehaviour
     {
         itemDictionary = new Dictionary<int, GameObject>();
 
-        for(int i = 0; i < itemPrefabs.Count; i++)
-        {
-            if (itemPrefabs[i] != null)
-            {
-                itemPrefabs[i].ID = i + 1;
-            }
-        }
-
         foreach(Item item in itemPrefabs)
         {
+            if (item == null)
+                continue;
+
+            if (itemDictionary.ContainsKey(item.ID))
+            {
+                Debug.LogError($"[ItemDictionary] duplicate item ID {item.ID} on '{item.name}'" + $"and '{itemDictionary[item.ID].name}'. Please work");
+            }
+
             itemDictionary[item.ID] = item.gameObject;
         }
     }

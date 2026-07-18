@@ -141,6 +141,9 @@ public class ShopController : MonoBehaviour
         slot.isShopSlot = isShop;
         slot.SetItem(itemInstance, price);
 
+        // Took me a dumb amount of time to find out this line was missing, im so mad rn!!!!
+        item.PopulateShopSlot(slot.itemIcon, slot.nameText, slot.descriptionText, slot.priceText, price);
+
         ItemDragHandler dragHandler = itemInstance.GetComponent<ItemDragHandler>();
         if (dragHandler)
             dragHandler.enabled = false;
@@ -152,5 +155,6 @@ public class ShopController : MonoBehaviour
         handler.Initialise(isShop);
         if (!isShop)
             handler.originalInvSlot = originalSlot;
+        
     }
 }

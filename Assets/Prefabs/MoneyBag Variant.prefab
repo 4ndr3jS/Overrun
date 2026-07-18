@@ -21,8 +21,12 @@ PrefabInstance:
       value: Money bag
       objectReference: {fileID: 0}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: buyPrice
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: Description
-      value: A full bag of gold!
+      value: A   full   bag   of   gold!
       objectReference: {fileID: 0}
     - target: {fileID: 2473605379936443261, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Sprite
