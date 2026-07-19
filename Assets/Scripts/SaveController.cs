@@ -4,6 +4,7 @@ using Unity.Cinemachine;
 using System.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
+using UnityEngine.Rendering.UI;
 
 public class SaveController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class SaveController : MonoBehaviour
     private InventoryController inventoryController;
     private HotbarController hotbarController;
     private Chest[] chests;
+
+    private ItemDictionary itemDictionary;
 
     void Start()
     {
@@ -25,6 +28,7 @@ public class SaveController : MonoBehaviour
         inventoryController = FindAnyObjectByType<InventoryController>();
         hotbarController = FindAnyObjectByType<HotbarController>();
         chests = FindObjectsByType<Chest>();
+        itemDictionary = FindAnyObjectByType<ItemDictionary>();
     }
 
     public void saveGame()
@@ -41,6 +45,10 @@ public class SaveController : MonoBehaviour
             chestSaveData = GetChestsState(),
             interactionRadius = intDetector != null ? intDetector.GetInteractionRadius() : 1f,
             playerCoins = CurrencyController.Instance.GetCoins(),
+            playerHealth = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetHealth() : 100f,
+            playerStamina = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetStamina() : 100f,
+            selectedHotbar = hotbarController.GetSelectedSlot(),
+            droppedItemsSaveData = GetDroppedItemsState()
         };
 
         File.WriteAllText(saveLocation, JsonUtility.ToJson(saveData));
@@ -61,6 +69,32 @@ public class SaveController : MonoBehaviour
         }
 
         return chestStates;
+    }
+
+    private List<DroppedItemsSaveData> GetDroppedItemsState()
+    {
+        List<DroppedItemsSaveData> droppedItems = new List<DroppedItemsSaveData>();
+
+        GameObject[] worldItems = GameObject.FindGameObjectsWithTag("Item");
+
+        foreach (GameObject obj in worldItems)
+        {
+            Item item = obj.GetComponent<Item>();
+            if (item == null || item.isCollected)
+                continue;
+
+            if (obj.GetComponentInParent<Item>() != null || obj.GetComponentInParent<ShopSlot>() != null)
+                continue;
+
+            droppedItems.Add(new DroppedItemsSaveData
+            {
+                itemID = item.ID,
+                quantity = item.quantity,
+                positon = obj.transform.position
+            });
+        }
+
+        return droppedItems;
     }
 
     public void LoadGame()
@@ -84,6 +118,13 @@ public class SaveController : MonoBehaviour
             InteractionDetector intDetector = player.GetComponentInChildren<InteractionDetector>();
             if (intDetector != null)
                 intDetector.SetInteractionRadius(saveData.interactionRadius > 0f ? saveData.interactionRadius : 1f);
+
+            if (PlayerVitals.Instance != null)
+                PlayerVitals.Instance.SetVitals(saveData.playerHealth, saveData.playerStamina);
+
+            hotbarController.SetSelectedSlotIndex(saveData.selectedHotbar);
+
+            SpawnDroppedItems(saveData.droppedItemsSaveData);
         }
         else
         {
@@ -103,6 +144,28 @@ public class SaveController : MonoBehaviour
             if(chestSaveData != null)
             {
                 chest.SetOpened(chestSaveData.isOpened);
+            }
+        }
+    }
+
+    private void SpawnDroppedItems(List<DroppedItemsSaveData> droppedItems)
+    {
+        if (droppedItems == null || itemDictionary == null)
+            return;
+
+        foreach (DroppedItemsSaveData data in droppedItems)
+        {
+            GameObject itemPrefab = itemDictionary.GetItemPrefab(data.itemID);
+            if (itemPrefab == null)
+                return;
+
+            GameObject spawnedItem = Instantiate(itemPrefab, data.positon, Quaternion.identity);
+
+            Item item = spawnedItem.GetComponent<Item>();
+            if(item != null)
+            {
+                item.quantity = data.quantity;
+                item.UpdateQuantityDisplay();
             }
         }
     }

@@ -89,3 +89,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
   currentItem: {fileID: 0}
+  equippedOutline: {fileID: 0}

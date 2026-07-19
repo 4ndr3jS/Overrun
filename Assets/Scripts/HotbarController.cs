@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 
 public class HotbarController : MonoBehaviour
@@ -12,6 +13,8 @@ public class HotbarController : MonoBehaviour
     private ItemDictionary itemDict;
 
     private Key[] hotbarKeys;
+
+    public int selectedSlotIndex = -1;
 
     private void Awake()
     {
@@ -40,11 +43,56 @@ public class HotbarController : MonoBehaviour
     void UseItemInSlot(int index)
     {
         Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
-        if(slot.currentItem != null)
+        if (slot.currentItem == null)
         {
-            Item item = slot.currentItem.GetComponent<Item>();
-            item.UseItem();
+            Debug.Log($"Slot {index} pressed but currentItem is null.");
+            return;
         }
+            
+
+        Item item = slot.currentItem.GetComponent<Item>();
+
+        Debug.Log($"Slot {index} pressed. Item: {item.Name}, can eat: {item.isConsumable}");
+
+        if (item.isConsumable)
+            item.UseItem();
+        else
+            EquipSlot(index);
+    }
+
+    private void EquipSlot(int index)
+    {
+        if (selectedSlotIndex == index)
+            return;
+
+        Debug.Log($"Equipping slot {index} outline object: {(hotbarPanel.transform.GetChild(index).GetComponent<Slot>().equippedOutline == null ? "null" : "assigned")}");
+
+        if (selectedSlotIndex >= 0 && selectedSlotIndex < hotbarPanel.transform.childCount)
+        {
+            Slot prevSlot = hotbarPanel.transform.GetChild(selectedSlotIndex).GetComponent<Slot>();
+            if (prevSlot != null)
+                prevSlot.SetEquipped(false);
+        }
+
+        selectedSlotIndex = index;
+
+        Slot newSlot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
+        if (newSlot != null)
+            newSlot.SetEquipped(true);
+    }
+
+    public int GetSelectedSlot() => selectedSlotIndex;
+
+    public void SetSelectedSlotIndex(int index)
+    {
+        selectedSlotIndex = -1;
+
+        if (index < 0 || index >= hotbarPanel.transform.childCount)
+            return;
+
+        Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
+        if (slot != null && slot.currentItem != null)
+            EquipSlot(index);
     }
 
     public List<InventorySaveData> GetHotbarItems()
@@ -68,6 +116,8 @@ public class HotbarController : MonoBehaviour
 
     public void SetHotbarItems(List<InventorySaveData> inventorySaveData)
     {
+        selectedSlotIndex = -1;
+
         foreach (Transform child in hotbarPanel.transform)
         {
             Destroy(child.gameObject);

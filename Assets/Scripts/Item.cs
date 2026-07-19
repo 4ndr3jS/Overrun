@@ -21,6 +21,9 @@ public class Item : MonoBehaviour
     [Range(0, 1)]
     public float sellPriceMultiplier = 0.5f;
 
+    [Header("Usage")]
+    public bool isConsumable = false;
+
 
     private Image iconImage;
 
@@ -95,7 +98,7 @@ public class Item : MonoBehaviour
 
     public virtual void UseItem()
     {
-        Debug.Log("Using item " + Name);
+        Debug.Log("Using item " + Name + $"isConsumable={isConsumable}");
     }
 
     public void PickUp()

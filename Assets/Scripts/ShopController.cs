@@ -3,6 +3,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ShopController : MonoBehaviour
@@ -40,6 +41,12 @@ public class ShopController : MonoBehaviour
             CurrencyController.Instance.OnCoinChange += UpdateMoneyDisplay;
             UpdateMoneyDisplay(CurrencyController.Instance.GetCoins());
         }
+    }
+
+    private void Update()
+    {
+        if (shopPanel != null && shopPanel.activeSelf && Keyboard.current != null && Keyboard.current[Key.Tab].wasPressedThisFrame)
+            CloseShop();
     }
 
     private void UpdateMoneyDisplay(int amount)

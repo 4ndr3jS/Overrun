@@ -128,8 +128,7 @@ MonoBehaviour:
   quantityText: {fileID: 8444439744813356879}
   buyPrice: 50
   sellPriceMultiplier: 0.5
-  holdable: 1
-  heldSprite: {fileID: 7322885499304307244, guid: 43ad78c8149e89c468930bd4a70dd9f5, type: 3}
+  isConsumable: 1
 --- !u!212 &-8757188319111990450
 SpriteRenderer:
   serializedVersion: 2

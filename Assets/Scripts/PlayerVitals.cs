@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -85,4 +86,18 @@ public class PlayerVitals : MonoBehaviour
 
     public float GetHealth() => currentHealth;
     public float GetStamina() => currentStamina;
+
+    public void SetVitals(float health, float stamina)
+    {
+        currentHealth = Mathf.Clamp(health, 0f, maxHealth);
+        currentStamina = Mathf.Clamp(stamina, 0f, maxStamina);
+
+        isDead = currentHealth <= 0f;
+
+        OnHealthChange?.Invoke(currentHealth, maxHealth);
+        OnStaminaChange?.Invoke(currentStamina, maxStamina);
+
+        if (isDead)
+            OnDeath?.Invoke();
+    }
 }

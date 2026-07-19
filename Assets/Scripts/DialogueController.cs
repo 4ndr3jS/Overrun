@@ -13,7 +13,7 @@ public class DialogueController : MonoBehaviour
     public Image portraitImage;
     public Transform choiceContainer;
     public GameObject choiceButtonPrefab;
-    private NPC activeNPC;
+    private IDialogueSpeaker activeNPC;
     private int actFrame = -1;
 
     void Awake()
@@ -44,7 +44,7 @@ public class DialogueController : MonoBehaviour
         dialoguePanel.SetActive(show);
     }
 
-    public void SetActiveNPC(NPC npc)
+    public void SetActiveNPC(IDialogueSpeaker npc)
     {
         activeNPC = npc;
         actFrame = npc != null ? Time.frameCount : -1;

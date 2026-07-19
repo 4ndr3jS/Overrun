@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [System.Serializable]
 
@@ -13,6 +14,12 @@ public class SaveData
     public float interactionRadius;
 
     public int playerCoins;
+
+    public float playerHealth;
+    public float playerStamina;
+
+    public int selectedHotbar = -1;
+    public List<DroppedItemsSaveData> droppedItemsSaveData;
 }
 
 [System.Serializable]
@@ -20,4 +27,13 @@ public class ChestSaveData
 {
     public string chestID;
     public bool isOpened;
+}
+
+
+[System.Serializable]
+public class DroppedItemsSaveData
+{
+    public int itemID;
+    public int quantity;
+    public Vector3 positon;
 }
