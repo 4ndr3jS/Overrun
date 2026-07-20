@@ -1,9 +1,15 @@
 using System;
 using System.ComponentModel.Design;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EnemyHelath : MonoBehaviour
 {
+    [Header("Coin drop")]
+    [SerializeField] GameObject coinPrefab;
+    [SerializeField] private int coinsPerDrop = 1;
+    [SerializeField] private float coinScatterRdius;
+
     [Header("Health")]
     public float maxHealth = 50f;
     private float currentHealth;
@@ -55,6 +61,7 @@ public class EnemyHelath : MonoBehaviour
             return;
 
         isDead = true;
+        DropCoins();
         OnDeath?.Invoke();
 
         if (sf != null)
@@ -68,6 +75,20 @@ public class EnemyHelath : MonoBehaviour
         maxHealth = Mathf.Max(1f, newMaxHealth);
         currentHealth = maxHealth;
         OnHealthChange?.Invoke(currentHealth, maxHealth);
+    }
+
+    private void DropCoins()
+    {
+        if (coinPrefab == null)
+            return;
+
+        Vector2 offset = UnityEngine.Random.insideUnitCircle * coinScatterRdius;
+        GameObject coin = Instantiate(coinPrefab, (Vector2)transform.position + offset, Quaternion.identity);
+
+        CoinPickup pickup = coin.GetComponent<CoinPickup>();
+
+        if (pickup != null)
+            pickup.SetCoinValue(coinsPerDrop);
     }
 
     public float GetHealth() => currentHealth;

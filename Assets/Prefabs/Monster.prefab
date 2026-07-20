@@ -209,6 +209,14 @@ MonoBehaviour:
   touchDamage: 5
   attackCooldown: 2
   flashDuration: 0.2
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  stuckCheckInterval: 0.5
+  minMovement: 0.05
+  timebeforeRecovery: 2
+  respawnMinDistance: 4
+  repsawnMaxDistance: 6
 --- !u!114 &8185614393562371769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,6 +242,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5614da2c8303584b93720465bd3846d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHelath
+  coinPrefab: {fileID: 2406343168968877064, guid: f8e40aacb168405448236baadb83a68f, type: 3}
+  coinsPerDrop: 1
+  coinScatterRdius: 0
   maxHealth: 50
   flashColor: {r: 0.9245283, g: 0.056692798, b: 0.056692798, a: 0.9411765}
   flashDuration: 0.15
