@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,7 @@ public class PlayerAttack : MonoBehaviour
     public float punchCooldown = 0.4f;
     public float punchHitDelay = 0.2f;
     public float punchDuration = 0.4f;
+    public float punchStamina = 3f;
 
     private const string AttackState = "AttackLeft";
     private const string IdleState = "Idle";
@@ -75,8 +77,12 @@ public class PlayerAttack : MonoBehaviour
 
         Item weapon = GetSelectedWeapon();
         float cooldown = weapon != null ? weapon.weaponCooldown : punchCooldown;
+        float staminCost = weapon != null ? weapon.weaponStamina : punchStamina;
 
         if (Time.time < lastAttackTime + cooldown)
+            return;
+
+        if ( PlayerVitals.Instance != null && !PlayerVitals.Instance.UseStamina(staminCost))
             return;
 
         lastAttackTime = Time.time;

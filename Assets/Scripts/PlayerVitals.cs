@@ -17,6 +17,12 @@ public class PlayerVitals : MonoBehaviour
     private float maxStamina = 100f;
     private float currentStamina;
 
+    [SerializeField] private float staminaRegen = 1f;
+    [SerializeField] private float staminaRegenInterval = 0.2f;
+    [SerializeField] private float healthRegenSec = 2f;
+
+    private float staminaRegenTimer;
+
     public event Action<float, float> OnHealthChange;
     public event Action<float, float> OnStaminaChange;
     public event Action OnDeath;
@@ -34,6 +40,31 @@ public class PlayerVitals : MonoBehaviour
         Instance = this;
         currentHealth = maxHealth;
         currentStamina = maxStamina;
+    }
+
+    private void Update()
+    {
+        if(!isDead && currentHealth < maxHealth)
+        {
+            currentHealth = Mathf.Min(currentHealth + healthRegenSec * Time.deltaTime, maxHealth);
+        }
+
+        OnHealthChange?.Invoke(currentHealth, maxHealth);
+
+
+        if (currentStamina >= maxStamina)
+        {
+            staminaRegenTimer = 0f;
+            return;
+        }
+
+        staminaRegenTimer += Time.deltaTime;
+
+        while(staminaRegenTimer >= staminaRegenInterval && currentStamina < maxStamina)
+        {
+            RegenStamina(staminaRegen);
+            staminaRegenTimer -= staminaRegenInterval;
+        }
     }
 
     private void Start()
@@ -69,10 +100,13 @@ public class PlayerVitals : MonoBehaviour
 
     public bool UseStamina(float amount)
     {
-        if (currentStamina > amount)
+        amount = Mathf.Max(0f, amount);
+
+        if (currentStamina < amount)
             return false;
 
-        currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+        currentStamina -= amount;
+
         OnStaminaChange?.Invoke(currentStamina, maxStamina);
         return true;
     }

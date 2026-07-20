@@ -1846,17 +1846,13 @@ MonoBehaviour:
   punchDown: {fileID: -7008412969330441016, guid: 2ab8b51a380abd84eb344fd50e89a8b0, type: 3}
   punchLeft: {fileID: 302641331129538988, guid: 2ab8b51a380abd84eb344fd50e89a8b0, type: 3}
   punchRight: {fileID: -253319119, guid: 2ab8b51a380abd84eb344fd50e89a8b0, type: 3}
-  axeEquipped: 0
-  axeAttackUp: {fileID: 7400000, guid: 6577ca1802d11f040932187b1785136f, type: 2}
-  axeAttackDown: {fileID: 7400000, guid: 49639d2b6690ff44cbbedc83be7eedf2, type: 2}
-  axeAttackLeft: {fileID: 7400000, guid: e365bd23d31190f45a832ca80331abf3, type: 2}
-  axeAttackRight: {fileID: 7400000, guid: d9d21222ee4a67c41903173f04ba999a, type: 2}
-  attackDamage: 10
-  attackRange: 0.8
-  attackRadius: 0.5
-  attackCooldown: 0.4
-  punchSpriteDuration: 0.15
-  hitDelay: 0.2
+  punchDamage: 5
+  punchRange: 0.8
+  punchRadius: 0.5
+  punchCooldown: 0.4
+  punchHitDelay: 0.2
+  punchDuration: 0.4
+  punchStamina: 3
 --- !u!114 &167297966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90039,11 +90035,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -1031107073887415184, guid: 6b3ead39a2c746041b1e2e9df944c389, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -94134,6 +94130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVitals
   maxHealth: 100
   maxStamina: 100
+  staminaRegen: 1
+  staminaRegenInterval: 0.2
 --- !u!114 &1976845248
 MonoBehaviour:
   m_ObjectHideFlags: 0

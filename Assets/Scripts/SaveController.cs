@@ -120,7 +120,7 @@ public class SaveController : MonoBehaviour
                 intDetector.SetInteractionRadius(saveData.interactionRadius > 0f ? saveData.interactionRadius : 1f);
 
             if (PlayerVitals.Instance != null)
-                PlayerVitals.Instance.SetVitals(saveData.playerHealth, saveData.playerStamina);
+                PlayerVitals.Instance.SetVitals(saveData.playerHealth, 100f);
 
             hotbarController.SetSelectedSlotIndex(saveData.selectedHotbar);
 

@@ -36,6 +36,9 @@ public class Item : MonoBehaviour
     public AnimationClip attackLeft;
     public AnimationClip attackRight;
 
+    [Min(1f)]
+    public float weaponStamina = 10f;
+
     private Image iconImage;
 
     private void Awake()
