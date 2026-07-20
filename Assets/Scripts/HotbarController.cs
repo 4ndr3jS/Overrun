@@ -50,8 +50,16 @@ public class HotbarController : MonoBehaviour
 
         Item item = slot.currentItem.GetComponent<Item>();
 
-        if (item.isConsumable)
-            item.UseItem();
+        if (item.isConsumable && item.UseItem())
+        {
+            item.RemoveFromStack(1);
+
+            if(item.quantity <= 0)
+            {
+                Destroy(slot.currentItem);
+                slot.currentItem = null;
+            }
+        }
     }
 
     private void EquipSlot(int index)
@@ -97,7 +105,8 @@ public class HotbarController : MonoBehaviour
                 hotbarData.Add(new InventorySaveData
                 {
                     itemID = item.ID,
-                    slotIndex = slotTransform.GetSiblingIndex()
+                    slotIndex = slotTransform.GetSiblingIndex(),
+                    quantity = item.quantity,
                 });
             }
         }
@@ -126,6 +135,14 @@ public class HotbarController : MonoBehaviour
             if (itemPrefab != null)
             {
                 GameObject item = Instantiate(itemPrefab, slot.transform);
+
+                Item itemComponent = item.GetComponent<Item>();
+                if (itemComponent != null)
+                {
+                    itemComponent.quantity = Mathf.Max(1, data.quantity);
+                    itemComponent.UpdateQuantityDisplay();
+                }
+
                 UIUtils.FitAndPreserveAspectRatio(item.GetComponent<RectTransform>());
                 slot.currentItem = item;
             }

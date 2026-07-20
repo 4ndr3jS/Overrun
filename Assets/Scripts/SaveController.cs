@@ -91,7 +91,7 @@ public class SaveController : MonoBehaviour
             if (item == null || item.isCollected)
                 continue;
 
-            if (obj.GetComponentInParent<Item>() != null || obj.GetComponentInParent<ShopSlot>() != null)
+            if (obj.GetComponentInParent<Slot>() != null || obj.GetComponentInParent<ShopSlot>() != null)
                 continue;
 
             droppedItems.Add(new DroppedItemsSaveData
@@ -204,7 +204,7 @@ public class SaveController : MonoBehaviour
         {
             GameObject itemPrefab = itemDictionary.GetItemPrefab(data.itemID);
             if (itemPrefab == null)
-                return;
+                continue;
 
             GameObject spawnedItem = Instantiate(itemPrefab, data.positon, Quaternion.identity);
 

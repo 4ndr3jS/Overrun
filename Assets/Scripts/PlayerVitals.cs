@@ -1,7 +1,5 @@
 using System;
-using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerVitals : MonoBehaviour
@@ -184,5 +182,27 @@ public class PlayerVitals : MonoBehaviour
 
         if (isDead)
             OnDeath?.Invoke();
+    }
+
+    public bool Heal(float amount)
+    {
+        if (isDead || amount <= 0f || currentHealth >= maxHealth)
+            return false;
+
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        OnHealthChange?.Invoke(currentHealth, maxHealth);
+
+        return true;
+    }
+
+    public bool Refreshen(float amount)
+    {
+        if (isDead || amount <= 0f || currentStamina >= maxStamina)
+            return false;
+
+        currentStamina = Mathf.Min(currentStamina + amount, maxStamina);
+        OnStaminaChange?.Invoke(currentStamina, maxStamina);
+
+        return true;
     }
 }

@@ -210,8 +210,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -70, y: -16.7}
-  m_SizeDelta: {x: 298, y: 50}
+  m_AnchoredPosition: {x: -63.416626, y: -19.738514}
+  m_SizeDelta: {x: 311.1669, y: 56.0771}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5742842784011717049
 CanvasRenderer:
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: This  bomb  explodes!
+  m_text: Tastes   like   apple   juice   and   regenerates   your   stamina!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4c25e27eec08e5646ba2a06ae35275c9, type: 2}
   m_sharedMaterial: {fileID: -5102497699851440727, guid: 4c25e27eec08e5646ba2a06ae35275c9, type: 2}
@@ -268,8 +268,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -559,8 +559,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -119, y: 11}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 1.6752, y: 11}
+  m_SizeDelta: {x: 441.3502, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &406319380341748387
 CanvasRenderer:

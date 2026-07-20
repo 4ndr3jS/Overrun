@@ -211,7 +211,7 @@ MonoBehaviour:
   flashDuration: 0.2
   obstacleLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   stuckCheckInterval: 0.5
   minMovement: 0.05
   timebeforeRecovery: 2

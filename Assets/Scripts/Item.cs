@@ -2,6 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum ConsumableType
+{
+    None,
+    Health,
+    Stamina
+}
+
 public class Item : MonoBehaviour
 {
     [Header("ID")]
@@ -23,6 +30,10 @@ public class Item : MonoBehaviour
 
     [Header("Usage")]
     public bool isConsumable = false;
+    public ConsumableType consumableType = ConsumableType.None;
+
+    [Min(0f)]
+    public float restoreAmount = 50f;
 
     [Header("Weapon")]
     public bool isWeapon = false;
@@ -110,9 +121,22 @@ public class Item : MonoBehaviour
         return clone;
     }
 
-    public virtual void UseItem()
+    public virtual bool UseItem()
     {
-        Debug.Log("Using item " + Name + $"isConsumable={isConsumable}");
+        if (!isConsumable || PlayerVitals.Instance == null)
+            return false;
+
+        switch (consumableType)
+        {
+            case ConsumableType.Health:
+                return PlayerVitals.Instance.Heal(restoreAmount);
+
+            case ConsumableType.Stamina:
+                return PlayerVitals.Instance.Refreshen(restoreAmount);
+
+            default:
+                return false;
+        }
     }
 
     public void PickUp()
