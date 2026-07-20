@@ -18,7 +18,7 @@ MonoBehaviour:
   - Heya! I run this little shop.
   - Interested in buying something?
   autoProgressLines: 0100
-  endDialogueLines: 0000
+  endDialogueLines: 0001
   autoProgressDelay: 1.5
   speakSpeed: 0.05
   voiceSound: {fileID: 8300000, guid: e7ddacf926d665c4c92ba6ada87dcde1, type: 3}

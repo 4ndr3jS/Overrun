@@ -44,15 +44,10 @@ public class HotbarController : MonoBehaviour
     {
         Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
         if (slot.currentItem == null)
-        {
-            Debug.Log($"Slot {index} pressed but currentItem is null.");
             return;
-        }
             
 
         Item item = slot.currentItem.GetComponent<Item>();
-
-        Debug.Log($"Slot {index} pressed. Item: {item.Name}, can eat: {item.isConsumable}");
 
         if (item.isConsumable)
             item.UseItem();
@@ -64,8 +59,6 @@ public class HotbarController : MonoBehaviour
     {
         if (selectedSlotIndex == index)
             return;
-
-        Debug.Log($"Equipping slot {index} outline object: {(hotbarPanel.transform.GetChild(index).GetComponent<Slot>().equippedOutline == null ? "null" : "assigned")}");
 
         if (selectedSlotIndex >= 0 && selectedSlotIndex < hotbarPanel.transform.childCount)
         {
