@@ -24,6 +24,17 @@ public class Item : MonoBehaviour
     [Header("Usage")]
     public bool isConsumable = false;
 
+    [Header("Weapon")]
+    public bool isWeapon = false;
+    public float weaponDamage = 10f;
+    public float weaponRange = 0.8f;
+    public float weaponRadius = 0.4f;
+    public float weaponCooldown = 0.4f;
+    public float weaponHitDelay = 0.2f;
+    public AnimationClip attackUp;
+    public AnimationClip attackDown;
+    public AnimationClip attackLeft;
+    public AnimationClip attackRight;
 
     private Image iconImage;
 

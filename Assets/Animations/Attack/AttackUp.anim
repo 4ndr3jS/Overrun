@@ -83,9 +83,9 @@ AnimationClip:
     - time: 0.12820513
       value: {fileID: 9005073738835190812, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
     - time: 0.25641026
-      value: {fileID: 6816709837434203744, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
+      value: {fileID: -2484452327245608279, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
     - time: 0.3846154
-      value: {fileID: 7370271881052882307, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
+      value: {fileID: -5029437034541227637, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
     attribute: m_Sprite
     path: Effect
     classID: 212
@@ -132,7 +132,7 @@ AnimationClip:
     - {fileID: 5714683192730101994, guid: ceb994e919795434ea05a35fc1bdb7df, type: 3}
     - {fileID: -316209040919722149, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
     - {fileID: 9005073738835190812, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
-    - {fileID: 6816709837434203744, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
+    - {fileID: -2484452327245608279, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
     - {fileID: 7370271881052882307, guid: 4ec4724e8d9c7de41850a32f2afa31e1, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2

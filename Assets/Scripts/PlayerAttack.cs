@@ -10,21 +10,12 @@ public class PlayerAttack : MonoBehaviour
     public Sprite punchDown;
     public Sprite punchLeft;
     public Sprite punchRight;
-
-    [Header("Axe Swing")]
-    public bool axeEquipped = false;
-    public AnimationClip axeAttackUp;
-    public AnimationClip axeAttackDown;
-    public AnimationClip axeAttackLeft;
-    public AnimationClip axeAttackRight;
-
-    [Header("Attack Settings")]
-    public float attackDamage = 10f;
-    public float attackRange = 0.8f;
-    public float attackRadius = 0.5f;
-    public float attackCooldown = 0.4f;
-    public float punchSpriteDuration = 0.15f;
-    public float hitDelay = 0.2f;
+    public float punchDamage = 5f;
+    public float punchRange = 0.8f;
+    public float punchRadius = 0.5f;
+    public float punchCooldown = 0.4f;
+    public float punchHitDelay = 0.2f;
+    public float punchDuration = 0.4f;
 
     private const string AttackState = "AttackLeft";
     private const string IdleState = "Idle";
@@ -38,7 +29,8 @@ public class PlayerAttack : MonoBehaviour
     private AnimationClip baseAttackClip;
     private Coroutine attackCoroutine;
     private float lastAttackTime = -Mathf.Infinity;
-    private Vector3 oldScale;
+    private bool oldPlayerFlip;
+    private bool oldAxeFlip;
     private bool flipped;
 
     private void Awake()
@@ -51,22 +43,22 @@ public class PlayerAttack : MonoBehaviour
         if (effect != null)
             axe = effect.GetComponent<SpriteRenderer>();
 
-        SetUpAxeAnimations();
-        HideAxe();
+        SetUpAnimations();
+        HideWeaponEffect();
     }
 
     private void LateUpdate()
     {
         if (attackCoroutine == null)
         {
-            HideAxe();
+            HideWeaponEffect();
             ResetPlayerFlip();
         }
     }
 
     private void OnDisable()
     {
-        HideAxe();
+        HideWeaponEffect();
         ResetPlayerFlip();
     }
 
@@ -78,67 +70,85 @@ public class PlayerAttack : MonoBehaviour
 
     public void TryAttack()
     {
-        if (PauseController.isGamePaused || Time.time < lastAttackTime + attackCooldown)
+        if (PauseController.isGamePaused)
+            return;
+
+        Item weapon = GetSelectedWeapon();
+        float cooldown = weapon != null ? weapon.weaponCooldown : punchCooldown;
+
+        if (Time.time < lastAttackTime + cooldown)
             return;
 
         lastAttackTime = Time.time;
         StopCurrentAttack();
-        attackCoroutine = StartCoroutine(Attack());
+        attackCoroutine = StartCoroutine(Attack(weapon));
     }
 
-    private IEnumerator Attack()
+    private IEnumerator Attack(Item weapon)
     {
         Vector2 direction = GetFacingDirection();
 
-        if (HasAxeEquipped())
-            yield return AxeAttack(direction);
+        if (weapon != null)
+            yield return WeaponAttack(weapon, direction);
         else
             yield return PunchAttack(direction);
 
         attackCoroutine = null;
     }
 
-    private IEnumerator AxeAttack(Vector2 direction)
+    private IEnumerator WeaponAttack(Item weapon, Vector2 direction)
     {
-        AnimationClip clip = GetAxeAnimation(direction);
+        AnimationClip clip = GetWeaponAnimation(weapon, direction);
         bool useMirroredRightAnimation = direction == Vector2.left &&
-                                         !HasAnimation(axeAttackLeft) &&
-                                         clip == axeAttackRight;
+                                         !HasAnimation(weapon.attackLeft) &&
+                                         clip == weapon.attackRight;
 
-        if (anim != null && overrideController != null && baseAttackClip != null && clip != null)
+        if (PlayAttackAnimation(clip))
         {
             if (useMirroredRightAnimation)
                 FlipPlayerForAttack();
 
-            overrideController[baseAttackClip] = clip;
-            anim.enabled = true;
-            anim.Play(AttackState, 0, 0f);
-            anim.Update(0f);
+            yield return new WaitForSeconds(Mathf.Min(weapon.weaponHitDelay, clip.length));
+            DamageEnemies(direction, weapon.weaponDamage, weapon.weaponRange, weapon.weaponRadius);
 
-            yield return new WaitForSeconds(Mathf.Min(hitDelay, clip.length));
-            DamageEnemies(direction);
-
-            yield return new WaitForSeconds(Mathf.Max(0f, clip.length - hitDelay));
+            yield return new WaitForSeconds(Mathf.Max(0f, clip.length - weapon.weaponHitDelay));
             ReturnToMovementAnimation();
-        }
-        else
-        {
-            ShowPunch(direction);
-            yield return new WaitForSeconds(hitDelay);
-            DamageEnemies(direction);
-            yield return new WaitForSeconds(punchSpriteDuration);
         }
 
         ResetPlayerFlip();
-        HideAxe();
+        HideWeaponEffect();
     }
 
     private IEnumerator PunchAttack(Vector2 direction)
     {
-        ShowPunch(direction);
-        yield return new WaitForSeconds(hitDelay);
-        DamageEnemies(direction);
-        yield return new WaitForSeconds(punchSpriteDuration);
+        Sprite frame = GetPunchSprite(direction);
+        if (frame == null || sr == null)
+            yield break;
+
+        if (anim != null)
+            anim.enabled = false;
+
+        sr.sprite = frame;
+        yield return new WaitForSeconds(Mathf.Min(punchHitDelay, punchDuration));
+        DamageEnemies(direction, punchDamage, punchRange, punchRadius);
+        yield return new WaitForSeconds(Mathf.Max(0f, punchDuration - punchHitDelay));
+
+        if (anim != null)
+            anim.enabled = true;
+
+        ReturnToMovementAnimation();
+    }
+
+    private bool PlayAttackAnimation(AnimationClip clip)
+    {
+        if (anim == null || overrideController == null || baseAttackClip == null || clip == null)
+            return false;
+
+        overrideController[baseAttackClip] = clip;
+        anim.enabled = true;
+        anim.Play(AttackState, 0, 0f);
+        anim.Update(0f);
+        return true;
     }
 
     private void StopCurrentAttack()
@@ -148,10 +158,10 @@ public class PlayerAttack : MonoBehaviour
 
         attackCoroutine = null;
         ResetPlayerFlip();
-        HideAxe();
+        HideWeaponEffect();
     }
 
-    private void SetUpAxeAnimations()
+    private void SetUpAnimations()
     {
         if (anim == null || anim.runtimeAnimatorController == null)
             return;
@@ -173,24 +183,21 @@ public class PlayerAttack : MonoBehaviour
             anim.runtimeAnimatorController = overrideController;
     }
 
-    private bool HasAxeEquipped()
+    private Item GetSelectedWeapon()
     {
-        if (axeEquipped)
-            return true;
-
         if (hotbar == null || hotbar.hotbarPanel == null)
-            return false;
+            return null;
 
         int slotNum = hotbar.GetSelectedSlot();
         if (slotNum < 0 || slotNum >= hotbar.hotbarPanel.transform.childCount)
-            return false;
+            return null;
 
         Slot slot = hotbar.hotbarPanel.transform.GetChild(slotNum).GetComponent<Slot>();
         if (slot == null || slot.currentItem == null)
-            return false;
+            return null;
 
         Item item = slot.currentItem.GetComponent<Item>();
-        return item != null && item.Name == "Axe";
+        return item != null && item.isWeapon ? item : null;
     }
 
     private Vector2 GetFacingDirection()
@@ -213,18 +220,32 @@ public class PlayerAttack : MonoBehaviour
         return y > 0 ? Vector2.up : Vector2.down;
     }
 
-    private AnimationClip GetAxeAnimation(Vector2 direction)
+    private AnimationClip GetWeaponAnimation(Item weapon, Vector2 direction)
     {
         if (direction == Vector2.up)
-            return axeAttackUp;
+            return weapon.attackUp;
 
         if (direction == Vector2.down)
-            return axeAttackDown;
+            return weapon.attackDown;
 
         if (direction == Vector2.right)
-            return axeAttackRight;
+            return weapon.attackRight;
 
-        return HasAnimation(axeAttackLeft) ? axeAttackLeft : axeAttackRight;
+        return HasAnimation(weapon.attackLeft) ? weapon.attackLeft : weapon.attackRight;
+    }
+
+    private Sprite GetPunchSprite(Vector2 direction)
+    {
+        if (direction == Vector2.up)
+            return punchUp;
+
+        if (direction == Vector2.down)
+            return punchDown;
+
+        if (direction == Vector2.right)
+            return punchRight;
+
+        return punchLeft != null ? punchLeft : punchRight;
     }
 
     private bool HasAnimation(AnimationClip clip)
@@ -232,33 +253,13 @@ public class PlayerAttack : MonoBehaviour
         return clip != null && !clip.empty;
     }
 
-    private void ShowPunch(Vector2 direction)
-    {
-        if (sr == null)
-            return;
-
-        Sprite sprite = punchDown;
-
-        if (direction == Vector2.up)
-            sprite = punchUp;
-        else if (direction == Vector2.left)
-            sprite = punchLeft;
-        else if (direction == Vector2.right)
-            sprite = punchRight;
-
-        if (sprite != null)
-            sr.sprite = sprite;
-    }
-
     private void ReturnToMovementAnimation()
     {
-        if (anim == null)
-            return;
-
-        anim.Play(anim.GetBool("isWalking") ? WalkState : IdleState, 0, 0f);
+        if (anim != null)
+            anim.Play(anim.GetBool("isWalking") ? WalkState : IdleState, 0, 0f);
     }
 
-    private void HideAxe()
+    private void HideWeaponEffect()
     {
         if (axe != null)
             axe.sprite = null;
@@ -266,9 +267,14 @@ public class PlayerAttack : MonoBehaviour
 
     private void FlipPlayerForAttack()
     {
-        oldScale = transform.localScale;
+        oldPlayerFlip = sr != null && sr.flipX;
+        oldAxeFlip = axe != null && axe.flipX;
         flipped = true;
-        transform.localScale = new Vector3(-Mathf.Abs(oldScale.x), oldScale.y, oldScale.z);
+        if (sr != null)
+            sr.flipX = !oldPlayerFlip;
+
+        if (axe != null)
+            axe.flipX = !oldAxeFlip;
     }
 
     private void ResetPlayerFlip()
@@ -276,20 +282,24 @@ public class PlayerAttack : MonoBehaviour
         if (!flipped)
             return;
 
-        transform.localScale = oldScale;
+        if (sr != null)
+            sr.flipX = oldPlayerFlip;
+
+        if (axe != null)
+            axe.flipX = oldAxeFlip;
         flipped = false;
     }
 
-    private void DamageEnemies(Vector2 direction)
+    private void DamageEnemies(Vector2 direction, float damage, float range, float radius)
     {
-        Vector2 hitPos = (Vector2)transform.position + direction * attackRange;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(hitPos, attackRadius);
+        Vector2 hitPos = (Vector2)transform.position + direction * range;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(hitPos, radius);
 
         foreach (Collider2D hit in hits)
         {
             EnemyHelath enemy = hit.GetComponentInParent<EnemyHelath>();
             if (enemy != null)
-                enemy.TakeDamage(attackDamage);
+                enemy.TakeDamage(damage);
         }
     }
 }

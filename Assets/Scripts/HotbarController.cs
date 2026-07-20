@@ -43,16 +43,15 @@ public class HotbarController : MonoBehaviour
     void UseItemInSlot(int index)
     {
         Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
+        EquipSlot(index);
+
         if (slot.currentItem == null)
             return;
-            
 
         Item item = slot.currentItem.GetComponent<Item>();
 
         if (item.isConsumable)
             item.UseItem();
-        else
-            EquipSlot(index);
     }
 
     private void EquipSlot(int index)
@@ -83,9 +82,7 @@ public class HotbarController : MonoBehaviour
         if (index < 0 || index >= hotbarPanel.transform.childCount)
             return;
 
-        Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
-        if (slot != null && slot.currentItem != null)
-            EquipSlot(index);
+        EquipSlot(index);
     }
 
     public List<InventorySaveData> GetHotbarItems()

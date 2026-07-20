@@ -21,16 +21,48 @@ PrefabInstance:
       value: Axe
       objectReference: {fileID: 0}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: attackUp
+      value: 
+      objectReference: {fileID: 7400000, guid: 6577ca1802d11f040932187b1785136f, type: 2}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: buyPrice
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: isWeapon
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: attackDown
+      value: 
+      objectReference: {fileID: 7400000, guid: 49639d2b6690ff44cbbedc83be7eedf2, type: 2}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: attackLeft
+      value: 
+      objectReference: {fileID: 7400000, guid: e365bd23d31190f45a832ca80331abf3, type: 2}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: Description
       value: A   very   sharp   axe!
       objectReference: {fileID: 0}
     - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: attackRight
+      value: 
+      objectReference: {fileID: 7400000, guid: d9d21222ee4a67c41903173f04ba999a, type: 2}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: weaponRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: isConsumable
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: weaponRadius
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2323886780078909254, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
+      propertyPath: weaponCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2473605379936443261, guid: 7405a0be8855c7c469267df9aac672d4, type: 3}
       propertyPath: m_Sprite
