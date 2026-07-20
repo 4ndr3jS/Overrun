@@ -754,7 +754,7 @@ TextureImporter:
       name: 5_29
       rect:
         serializedVersion: 2
-        x: 64
+        x: 66
         y: 256
         width: 64
         height: 65
@@ -842,7 +842,7 @@ TextureImporter:
       name: 5_33
       rect:
         serializedVersion: 2
-        x: 64
+        x: 66
         y: 191
         width: 64
         height: 65
@@ -930,7 +930,7 @@ TextureImporter:
       name: 5_37
       rect:
         serializedVersion: 2
-        x: 64
+        x: 66
         y: 126
         width: 64
         height: 65

@@ -30,6 +30,8 @@ public class PlayerDeathController : MonoBehaviour
     private Sprite originalSprite;
     private Coroutine deathRoutine;
 
+    [SerializeField] private WaveController waveController;
+
     private void Start()
     {
         if (PlayerVitals.Instance != null)
@@ -109,6 +111,11 @@ public class PlayerDeathController : MonoBehaviour
             Vector3 delta = transform.position - oldPos;
             cmCamera.OnTargetObjectWarped(transform, delta);
         }
+
+        if (waveController != null)
+            waveController.ResetWaves();
+        else
+            Debug.Log("WaveController is not assigend.");
 
         if (PlayerVitals.Instance != null)
             PlayerVitals.Instance.Revive();

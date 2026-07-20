@@ -18,6 +18,9 @@ public class SaveData
     public float playerHealth;
     public float playerStamina;
 
+    public int monstersKilled;
+    public int highestWave;
+
     public int selectedHotbar = -1;
     public List<DroppedItemsSaveData> droppedItemsSaveData;
 }

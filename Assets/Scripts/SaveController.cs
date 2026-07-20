@@ -1,9 +1,11 @@
-using UnityEngine;
-using System.IO;
-using Unity.Cinemachine;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using TMPro;
+using Unity.Cinemachine;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
+using UnityEngine;
 using UnityEngine.Rendering.UI;
 
 public class SaveController : MonoBehaviour
@@ -15,6 +17,10 @@ public class SaveController : MonoBehaviour
     private Chest[] chests;
 
     private ItemDictionary itemDictionary;
+
+    [SerializeField] private Vector3 fallbackPos = Vector3.zero;
+    [SerializeField] private Collider2D fallbackBounds;
+    [SerializeField] private float minSavedY = -18f;
 
     void Start()
     {
@@ -48,7 +54,9 @@ public class SaveController : MonoBehaviour
             playerHealth = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetHealth() : 100f,
             playerStamina = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetStamina() : 100f,
             selectedHotbar = hotbarController.GetSelectedSlot(),
-            droppedItemsSaveData = GetDroppedItemsState()
+            droppedItemsSaveData = GetDroppedItemsState(),
+            monstersKilled = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetMonsterKills() : 0,
+            highestWave = PlayerVitals.Instance != null ? PlayerVitals.Instance.GetHighestWave() : 0,
         };
 
         File.WriteAllText(saveLocation, JsonUtility.ToJson(saveData));
@@ -104,9 +112,43 @@ public class SaveController : MonoBehaviour
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);
             GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-            player.transform.position = saveData.playerPosition;
+            bool invalidPos = saveData.playerPosition.y < minSavedY;
 
-            FindAnyObjectByType<CinemachineConfiner2D>().BoundingShape2D = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
+            Vector3 loadedPos = invalidPos ? fallbackPos : saveData.playerPosition;
+
+            player.transform.position = loadedPos;
+
+            CinemachineConfiner2D confiner = FindAnyObjectByType<CinemachineConfiner2D>();
+
+            if (confiner != null)
+            {
+                if (invalidPos)
+                {
+                    if(fallbackBounds != null)
+                    {
+                        confiner.BoundingShape2D = fallbackBounds;
+                        confiner.InvalidateBoundingShapeCache();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Fallback map bound is not assigned");
+                    }
+                }
+                else
+                {
+                    GameObject savedBoundsObject = GameObject.Find(saveData.mapBoundary);
+                    if(savedBoundsObject != null)
+                    {
+                        Collider2D savedBound = savedBoundsObject.GetComponent<Collider2D>();
+
+                        if(savedBound != null)
+                        {
+                            confiner.BoundingShape2D = savedBound;
+                            confiner.InvalidateBoundingShapeCache();
+                        }
+                    }
+                }
+            }
 
             inventoryController.SetInventoryItems(saveData.inventorySaveData);
             hotbarController.SetHotbarItems(saveData.hotbarSaveData);
@@ -120,7 +162,12 @@ public class SaveController : MonoBehaviour
                 intDetector.SetInteractionRadius(saveData.interactionRadius > 0f ? saveData.interactionRadius : 1f);
 
             if (PlayerVitals.Instance != null)
+            {
                 PlayerVitals.Instance.SetVitals(saveData.playerHealth, 100f);
+
+                PlayerVitals.Instance.SetPlayerStats(saveData.monstersKilled, saveData.highestWave);
+            }
+                
 
             hotbarController.SetSelectedSlotIndex(saveData.selectedHotbar);
 

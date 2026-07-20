@@ -61,7 +61,10 @@ public class EnemyHelath : MonoBehaviour
             return;
 
         isDead = true;
+
+        PlayerVitals.Instance?.RecordMonstersKill();
         DropCoins();
+
         OnDeath?.Invoke();
 
         if (sf != null)

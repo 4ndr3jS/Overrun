@@ -61,7 +61,6 @@ public class WaveController : MonoBehaviour
         if (startOnPlay)
         {
             StartWave();
-            Debug.Log("Start1");
         }
             
     }
@@ -71,7 +70,6 @@ public class WaveController : MonoBehaviour
         if (waveRoutine == null)
         {
             waveRoutine = StartCoroutine(RunWaves());
-            Debug.Log("Start2");
         }
             
     }
@@ -84,18 +82,39 @@ public class WaveController : MonoBehaviour
         waveRoutine = null;
     }
 
+    public void ResetWaves()
+    {
+        if (waveRoutine != null)
+        {
+            StopCoroutine(waveRoutine);
+            waveRoutine = null;
+        }
+
+        foreach (GameObject enemy in aliveEnem)
+        {
+            if (enemy != null)
+                Destroy(enemy);
+        }
+
+        aliveEnem.Clear();
+
+        currentWave = 0;
+        totalEnemies = 0;
+        enemiesLefttoSpawn = 0;
+    }
+
     private IEnumerator RunWaves() 
     {
         while (HasMonsterPrefab())
         {
             currentWave++;
 
+            PlayerVitals.Instance?.RecordHighestWave(currentWave);
+
             int enemCount = enemiesFirstWave + (currentWave - 1) * extraEnemiesWave;
 
             totalEnemies = enemCount;
             enemiesLefttoSpawn = enemCount;
-
-            Debug.Log($"Starting wave number {currentWave} with {enemCount} enemies");
 
             for (int i = 0; i < enemCount; i++)
             {
@@ -111,7 +130,6 @@ public class WaveController : MonoBehaviour
                 yield return null;
             }
 
-            Debug.Log($"Wave number {currentWave} has been cleared");
             yield return new WaitForSeconds(timeInBetweenWaves);
         }
 

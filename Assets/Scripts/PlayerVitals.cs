@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -20,6 +21,13 @@ public class PlayerVitals : MonoBehaviour
     [SerializeField] private float staminaRegen = 1f;
     [SerializeField] private float staminaRegenInterval = 0.2f;
     [SerializeField] private float healthRegenSec = 2f;
+
+    [Header("Player stats")]
+    [SerializeField] private int monstersKilledCount;
+    [SerializeField] private int highestWaveAcheived;
+
+    [SerializeField] private TMP_Text monstersKilled;
+    [SerializeField] private TMP_Text highestWave;
 
     private float staminaRegenTimer;
 
@@ -71,6 +79,7 @@ public class PlayerVitals : MonoBehaviour
     {
         OnHealthChange?.Invoke(currentHealth, maxHealth);
         OnStaminaChange?.Invoke(currentStamina, maxStamina);
+        UpdateStatsUI();
     }
 
     public void TakeDamage(float amount)
@@ -115,6 +124,48 @@ public class PlayerVitals : MonoBehaviour
     {
         currentStamina = Mathf.Clamp(currentStamina + amount, 0f, maxStamina);
         OnStaminaChange?.Invoke(currentStamina, maxStamina);
+    }
+
+    public void RecordMonstersKill()
+    {
+        monstersKilledCount++;
+        UpdateStatsUI();
+    }
+
+    public void RecordHighestWave(int wave)
+    {
+        if (wave <= highestWaveAcheived)
+            return;
+
+        highestWaveAcheived = wave;
+        UpdateStatsUI();
+    }
+
+    public int GetMonsterKills()
+    {
+        return monstersKilledCount;
+    }
+
+    public int GetHighestWave()
+    {
+        return highestWaveAcheived;
+    }
+
+    public void SetPlayerStats(int kills, int highestWave)
+    {
+        monstersKilledCount = Mathf.Max(0, kills);
+        highestWaveAcheived = Mathf.Max(0, highestWave);
+
+        UpdateStatsUI();
+    }
+
+    private void UpdateStatsUI()
+    {
+        if (monstersKilled != null)
+            monstersKilled.text = $"MONSTERS  KILLED:  {monstersKilledCount}";
+
+        if (highestWave != null)
+            highestWave.text = $"HIGHEST  WAVE:  {highestWaveAcheived}";
     }
 
 

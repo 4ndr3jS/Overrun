@@ -48,7 +48,6 @@ public class CurrencyController : MonoBehaviour
     {
         playerCoins += amount;
         UpdateCoinDisplay();
-        Debug.Log($"Added {amount}. Total: {playerCoins}");
     }
 
     public void SetCoins(int amount)

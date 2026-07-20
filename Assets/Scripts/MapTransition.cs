@@ -83,8 +83,6 @@ public class MapTransition : MonoBehaviour
 
         PauseController.SetPause(false);
 
-        Debug.Log($"We are at {DoorA.name}. Wave Controller found: {DoorA.waveController != null}");
-
         if (DoorA != null && DoorA.waveController != null)
             DoorA.waveController.StartWave();
 
