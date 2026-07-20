@@ -11,6 +11,10 @@ public class MapTransition : MonoBehaviour
     [Header("Confiner ")]
     public Collider2D roomBounds;
 
+    [Header("Waves")]
+    [Tooltip("We are going to start the waves when the player arrives to this bound.")]
+    public WaveController waveController;
+
     [Header("Refrences")]
     public CinemachineCamera cmCamera;
     public CinemachineConfiner2D confiner;
@@ -78,6 +82,11 @@ public class MapTransition : MonoBehaviour
         PlayerController.allowTurnWhilePaused = false;
 
         PauseController.SetPause(false);
+
+        Debug.Log($"We are at {DoorA.name}. Wave Controller found: {DoorA.waveController != null}");
+
+        if (DoorA != null && DoorA.waveController != null)
+            DoorA.waveController.StartWave();
 
         player.GetComponent<PlayerController>()?.ResyncMoveInput();
     }

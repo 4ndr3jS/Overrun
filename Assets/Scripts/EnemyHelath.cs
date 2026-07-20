@@ -63,6 +63,13 @@ public class EnemyHelath : MonoBehaviour
             Destroy(gameObject);
     }
 
+    public void SetMaxHealth(float newMaxHealth)
+    {
+        maxHealth = Mathf.Max(1f, newMaxHealth);
+        currentHealth = maxHealth;
+        OnHealthChange?.Invoke(currentHealth, maxHealth);
+    }
+
     public float GetHealth() => currentHealth;
     public float GetMaxHealth() => maxHealth;
 }
