@@ -40,6 +40,21 @@ public class WaveController : MonoBehaviour
 
     private readonly List<GameObject> aliveEnem = new List<GameObject>();
     private Coroutine waveRoutine;
+    private int totalEnemies;
+    private int enemiesLefttoSpawn;
+
+    public int CurrentWave => currentWave;
+    public int TotalEnemies => totalEnemies;
+    public bool HasStarted => waveRoutine != null;
+
+    public int EnemRemaining
+    {
+        get
+        {
+            aliveEnem.RemoveAll(enemy => enemy == null);
+            return aliveEnem.Count + enemiesLefttoSpawn;
+        }
+    }
 
     private void Start()
     {
@@ -77,10 +92,16 @@ public class WaveController : MonoBehaviour
 
             int enemCount = enemiesFirstWave + (currentWave - 1) * extraEnemiesWave;
 
+            totalEnemies = enemCount;
+            enemiesLefttoSpawn = enemCount;
+
             Debug.Log($"Starting wave number {currentWave} with {enemCount} enemies");
 
-            for (int i = 0; i < enemCount; i++) {
+            for (int i = 0; i < enemCount; i++)
+            {
                 SpawnEnemy();
+                enemiesLefttoSpawn--;
+
                 yield return new WaitForSeconds(timeInBetweenSpawns);
             }
 

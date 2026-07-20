@@ -2,6 +2,7 @@ using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class EnemyController : MonoBehaviour
@@ -12,6 +13,18 @@ public class EnemyController : MonoBehaviour
     public int touchDamage = 10;
     public float attackCooldown = 2f;
     public float flashDuration = 1f;
+
+    [Header("Stuck?")]
+    [SerializeField] private LayerMask obstacleLayers;
+    [SerializeField] private float stuckCheckInterval = 0.5f;
+    [SerializeField] private float minMovement = 0.05f;
+    [SerializeField] private float timebeforeRecovery = 2f;
+    [SerializeField] private float respawnMinDistance = 4f;
+    [SerializeField] private float repsawnMaxDistance = 6f;
+
+    private Vector2 lastStuckCheckPos;
+    private float nextStuckCheckTime;
+    private float stuckTime;
 
     Rigidbody2D rb;
     Transform target;
@@ -58,6 +71,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         target = GameObject.Find("Player").transform;
+        if (rb != null)
+            lastStuckCheckPos = rb.position;
     }
 
     void Update()
@@ -79,6 +94,56 @@ public class EnemyController : MonoBehaviour
         }
 
         UpdateAnimator();
+        CheckIfStuck();
+    }
+
+    private void CheckIfStuck()
+    {
+        if (rb == null || target == null || isDead)
+            return;
+
+        if (Time.time < nextStuckCheckTime)
+            return;
+
+        nextStuckCheckTime = Time.time + stuckCheckInterval;
+
+        float disFromPlayer = Vector2.Distance(rb.position, target.position);
+        float disMoved = Vector2.Distance(rb.position, lastStuckCheckPos);
+
+        bool shouldBeMoving = disFromPlayer > 1.5f && moveDirection.sqrMagnitude > 0.01f;
+        if (shouldBeMoving && disMoved < minMovement)
+            stuckTime += stuckCheckInterval;
+        else
+            stuckTime = 0f;
+
+        lastStuckCheckPos = rb.position;
+
+        if(stuckTime >= timebeforeRecovery)
+        {
+            moveToSafePos();
+            stuckTime = 0f;
+        }
+    }
+
+    private void moveToSafePos()
+    {
+        for(int i = 0; i < 12; i++)
+        {
+            Vector2 dir = Random.insideUnitCircle.normalized;
+            float dist = Random.Range(respawnMinDistance, repsawnMaxDistance);
+
+            Vector2 tryPos = (Vector2)target.position + dir * dist;
+
+            Collider2D obstace = Physics2D.OverlapCircle(tryPos, 0.3f, obstacleLayers);
+
+            if (obstace != null)
+                continue;
+
+            rb.position = tryPos;
+            rb.linearVelocity = Vector2.zero;
+            lastStuckCheckPos = tryPos;
+            return;
+        }
     }
 
     private void FixedUpdate()
