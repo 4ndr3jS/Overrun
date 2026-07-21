@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +17,8 @@ public class PlayerAttack : MonoBehaviour
     public float punchHitDelay = 0.2f;
     public float punchDuration = 0.4f;
     public float punchStamina = 3f;
+
+    [SerializeField] private LayerMask enemyLayer;
 
     private const string AttackState = "AttackLeft";
     private const string IdleState = "Idle";
@@ -111,11 +112,13 @@ public class PlayerAttack : MonoBehaviour
 
         if (PlayAttackAnimation(clip))
         {
+            SoundEffectManager.Play("WeaponSwing", true, 0.9f, 1.1f);
+
             if (useMirroredRightAnimation)
                 FlipPlayerForAttack();
 
             yield return new WaitForSeconds(Mathf.Min(weapon.weaponHitDelay, clip.length));
-            DamageEnemies(direction, weapon.weaponDamage, weapon.weaponRange, weapon.weaponRadius);
+            DamageEnemies(direction, weapon.weaponDamage, weapon.weaponRange, weapon.weaponRadius, weapon.weaponAttackAngle);
 
             yield return new WaitForSeconds(Mathf.Max(0f, clip.length - weapon.weaponHitDelay));
             ReturnToMovementAnimation();
@@ -136,7 +139,7 @@ public class PlayerAttack : MonoBehaviour
 
         sr.sprite = frame;
         yield return new WaitForSeconds(Mathf.Min(punchHitDelay, punchDuration));
-        DamageEnemies(direction, punchDamage, punchRange, punchRadius);
+        DamageEnemies(direction, punchDamage, punchRange, punchRadius, 45);
         yield return new WaitForSeconds(Mathf.Max(0f, punchDuration - punchHitDelay));
 
         if (anim != null)
@@ -296,15 +299,24 @@ public class PlayerAttack : MonoBehaviour
         flipped = false;
     }
 
-    private void DamageEnemies(Vector2 direction, float damage, float range, float radius)
+    private void DamageEnemies(Vector2 direction, float damage, float range, float radius, float attackAngle)
     {
-        Vector2 hitPos = (Vector2)transform.position + direction * range;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(hitPos, radius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, range, enemyLayer);
+        HashSet<EnemyHelath> damagedEnem = new HashSet<EnemyHelath>();
+
 
         foreach (Collider2D hit in hits)
         {
-            EnemyHelath enemy = hit.GetComponentInParent<EnemyHelath>();
-            if (enemy != null)
+            Vector2 dirToEnem = ((Vector2)hit.transform.position - (Vector2)transform.position).normalized;
+
+            float angleToEnem = Vector2.Angle(direction.normalized, dirToEnem);
+
+            if (angleToEnem > attackAngle / 2f)
+                continue;
+
+            EnemyHelath enemy = hit.GetComponent<EnemyHelath>();
+
+            if (enemy != null && damagedEnem.Add(enemy))
                 enemy.TakeDamage(damage);
         }
     }

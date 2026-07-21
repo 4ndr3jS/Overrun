@@ -35,7 +35,7 @@ public class SoundEffectManager : MonoBehaviour
         sfxSlider.onValueChanged.AddListener(delegate { onValueChanged(); });
     }
 
-    public static void Play(string soundName, bool randomPitch = false)
+    public static void Play(string soundName, bool randomPitch = false, float minPitch = 1.5f, float maxPitch = 2f)
     {
         AudioClip audioClip = soundEffectLibrary.GetRandomClip(soundName);
         if(audioClip != null)

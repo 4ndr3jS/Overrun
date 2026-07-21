@@ -42,6 +42,8 @@ public class Item : MonoBehaviour
     public float weaponRadius = 0.4f;
     public float weaponCooldown = 0.4f;
     public float weaponHitDelay = 0.2f;
+    [Range(0f, 360f)]
+    public float weaponAttackAngle = 90f;
     public AnimationClip attackUp;
     public AnimationClip attackDown;
     public AnimationClip attackLeft;
