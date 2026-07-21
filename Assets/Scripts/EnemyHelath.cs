@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class EnemyHelath : MonoBehaviour
@@ -50,9 +48,6 @@ public class EnemyHelath : MonoBehaviour
             Die();
             return;
         }
-
-        if (sf != null)
-            sf.Flash(flashColor, flashDuration);
     }
 
     private void Die()

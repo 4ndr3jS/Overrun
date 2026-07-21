@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
-
 
 public class HotbarController : MonoBehaviour
 {
@@ -23,7 +21,7 @@ public class HotbarController : MonoBehaviour
         hotbarKeys = new Key[slotCount];
         for(int i = 0; i < slotCount; i++)
         {
-            hotbarKeys[i] = i < 7 ? (Key)((int)Key.Digit1 + i) : Key.Digit0;
+            hotbarKeys[i] = i < 7 ? (Key)((int)Key.Digit1 + i) : Key.Digit8;
         }
     }
 
