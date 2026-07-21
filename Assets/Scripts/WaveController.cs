@@ -128,6 +128,8 @@ public class WaveController : MonoBehaviour
                 yield return null;
             }
 
+            SaveController.Instance?.AutoSaveNow();
+
             yield return new WaitForSeconds(timeInBetweenWaves);
         }
 

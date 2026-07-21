@@ -1,15 +1,19 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using TMPro;
 using Unity.Cinemachine;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class SaveController : MonoBehaviour
 {
+    public static SaveController Instance { get; private set; }
+
+    [Header("AutoSave")]
+    private float autoSaveInterval = 30f;
+    private bool isInit;
 
     private string saveLocation;
     private InventoryController inventoryController;
@@ -22,10 +26,24 @@ public class SaveController : MonoBehaviour
     [SerializeField] private Collider2D fallbackBounds;
     [SerializeField] private float minSavedY = -18f;
 
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     void Start()
     {
         InitializeComponents();
+        isInit = true;
+
         LoadGame();
+        StartCoroutine(AutoSaveRoutine());
     }
 
     private void InitializeComponents()
@@ -215,5 +233,42 @@ public class SaveController : MonoBehaviour
                 item.UpdateQuantityDisplay();
             }
         }
+    }
+
+    private IEnumerator AutoSaveRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(autoSaveInterval);
+
+            AutoSaveNow();
+        }
+    }
+
+    public void AutoSaveNow()
+    {
+        if (!isInit)
+            return;
+
+        saveGame();
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+        {
+            AutoSaveNow();
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        AutoSaveNow();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }

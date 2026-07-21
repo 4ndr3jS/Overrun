@@ -74,6 +74,8 @@ public class MapTransition : MonoBehaviour
 
         TeleportPlayer(player);
 
+        SaveController.Instance?.AutoSaveNow();
+
         PlayerController.allowTurnWhilePaused = true;
 
         if (ScreenFader.Instance != null)
