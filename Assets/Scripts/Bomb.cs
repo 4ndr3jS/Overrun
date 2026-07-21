@@ -66,7 +66,7 @@ public class Bomb : MonoBehaviour
         hasExploded = true;
 
         SoundEffectManager.Play(explosion);
-        if (impulseSource != null)
+        if (impulseSource != null && SettingsController.isScreenShake)
             impulseSource.GenerateImpulse();
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayers);

@@ -57,12 +57,26 @@ public class Item : MonoBehaviour
     public GameObject bombPrefab;
 
     private Image iconImage;
+    private Vector2 defaultQuantityPos;
+    private float defaultQuantitySize;
+    private bool hasDefualtQauntityStyle;
 
     private void Awake()
     {
         isCollected = false;
         quantityText = GetComponentInChildren<TMP_Text>();
         iconImage = GetComponent<Image>();
+
+        if(quantityText != null)
+        {
+            RectTransform rectTransform = quantityText.GetComponent<RectTransform>();
+
+            defaultQuantityPos = rectTransform.anchoredPosition;
+            defaultQuantitySize = quantityText.fontSize;
+
+            hasDefualtQauntityStyle = true;
+        }
+
         UpdateQuantityDisplay();
     }
 
@@ -162,5 +176,15 @@ public class Item : MonoBehaviour
         RectTransform rt = quantityText.GetComponent<RectTransform>();
         rt.anchoredPosition = anchoredPosition;
         quantityText.fontSize = fontSize;
+    }
+
+    public void ResetQuantityTextStyle()
+    {
+        if (quantityText == null || !hasDefualtQauntityStyle)
+            return;
+
+        RectTransform rt = quantityText.GetComponent<RectTransform>();
+        rt.anchoredPosition = defaultQuantityPos;
+        quantityText.fontSize = defaultQuantitySize;
     }
 }

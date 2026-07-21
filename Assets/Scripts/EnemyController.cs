@@ -205,7 +205,7 @@ public class EnemyController : MonoBehaviour
             flash.Flash(new Color(1f, 0.3f, 0.3f), flashDuration);
 
         CinemachineImpulseSource impulse = collision.collider.GetComponent<CinemachineImpulseSource>();
-        if (impulse != null)
+        if (impulse != null && SettingsController.isScreenShake)
             impulse.GenerateImpulse();
     }
 }

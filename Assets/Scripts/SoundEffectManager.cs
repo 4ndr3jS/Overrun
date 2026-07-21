@@ -9,6 +9,9 @@ public class SoundEffectManager : MonoBehaviour
     private static AudioSource audioSource;
     private static AudioSource randomPitchAudioSource;
     private static AudioSource voiceAudioSource;
+
+    private static float currentVolume = 1f;
+
     [SerializeField] private Slider sfxSlider;
 
     private void Awake()
@@ -22,6 +25,7 @@ public class SoundEffectManager : MonoBehaviour
             voiceAudioSource = audioSources[2];
             audioSource = GetComponent<AudioSource>();
             soundEffectLibrary = GetComponent<SoundEffectLibrary>();
+            ApplyVolume();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -32,7 +36,9 @@ public class SoundEffectManager : MonoBehaviour
 
     public void Start()
     {
-        sfxSlider.onValueChanged.AddListener(delegate { onValueChanged(); });
+        if(sfxSlider != null){
+            sfxSlider.onValueChanged.AddListener(delegate { onValueChanged(); });
+        }
     }
 
     public static void Play(string soundName, bool randomPitch = false, float minPitch = 1.5f, float maxPitch = 2f)
@@ -54,9 +60,19 @@ public class SoundEffectManager : MonoBehaviour
 
     public static void SetVolume(float volume)
     {
-        audioSource.volume = volume;
-        randomPitchAudioSource.volume = volume;
-        voiceAudioSource.volume = volume;
+        currentVolume = Mathf.Clamp01(volume);
+
+        ApplyVolume();
+    }
+
+    private static void ApplyVolume()
+    {
+        if (audioSource == null || randomPitchAudioSource == null || voiceAudioSource == null)
+            return;
+
+        audioSource.volume = currentVolume;
+        randomPitchAudioSource.volume = currentVolume;
+        voiceAudioSource.volume = currentVolume;
     }
 
     public void onValueChanged()

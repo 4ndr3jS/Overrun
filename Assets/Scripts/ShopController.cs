@@ -21,6 +21,8 @@ public class ShopController : MonoBehaviour
     public Vector2 shopQuantityTextPosition = new Vector2(18f, -18f);
     public float shopQuantityTextFontSize = 12f;
 
+    public bool isShopOpen => shopPanel != null && shopPanel.activeSelf;
+
     private void Awake()
     {
         if (Instance == null)
@@ -38,12 +40,6 @@ public class ShopController : MonoBehaviour
             CurrencyController.Instance.OnCoinChange += UpdateMoneyDisplay;
             UpdateMoneyDisplay(CurrencyController.Instance.GetCoins());
         }
-    }
-
-    private void Update()
-    {
-        if (shopPanel != null && shopPanel.activeSelf && Keyboard.current != null && Keyboard.current[Key.Tab].wasPressedThisFrame)
-            CloseShop();
     }
 
     private void UpdateMoneyDisplay(int amount)
