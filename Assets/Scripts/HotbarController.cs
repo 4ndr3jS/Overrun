@@ -37,8 +37,7 @@ public class HotbarController : MonoBehaviour
     }
 
 
-
-    void UseItemInSlot(int index)
+    public void UseItemInSlot(int index)
     {
         Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
         EquipSlot(index);

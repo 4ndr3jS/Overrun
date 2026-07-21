@@ -1,7 +1,7 @@
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Slot : MonoBehaviour
+public class Slot : MonoBehaviour, IPointerClickHandler
 {
     // The item that is currently being held in this slot
     public GameObject currentItem;
@@ -45,5 +45,20 @@ public class Slot : MonoBehaviour
             if (isEquipped)
                 equippedOutline.transform.SetAsLastSibling();
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+            UseAsHotbarSlot();
+    }
+
+    public void UseAsHotbarSlot()
+    {
+        HotbarController hotbarC = GetComponentInParent<HotbarController>();
+        if (hotbarC == null)
+            return;
+
+        hotbarC.UseItemInSlot(transform.GetSiblingIndex());
     }
 }

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 public class PlayerAttack : MonoBehaviour
 {
     [Header("Punch")]
@@ -37,6 +37,8 @@ public class PlayerAttack : MonoBehaviour
     private bool oldAxeFlip;
     private bool flipped;
 
+    private readonly List<RaycastResult> uiRaycastRes = new List<RaycastResult>();
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -68,9 +70,37 @@ public class PlayerAttack : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            TryAttack();
+        if (!context.performed)
+            return;
+
+        if (context.control.device is Mouse && isMouseOverHotbarSlot())
+            return;
+
+        TryAttack();
     }
+
+    private bool isMouseOverHotbarSlot()
+    {
+        if (EventSystem.current == null || Mouse.current == null)
+            return false;
+
+        PointerEventData pointerData = new PointerEventData(EventSystem.current){
+            position = Mouse.current.position.ReadValue()
+        };
+        uiRaycastRes.Clear();
+
+        EventSystem.current.RaycastAll(pointerData, uiRaycastRes);
+        foreach(RaycastResult result in uiRaycastRes)
+        {
+            Slot slot = result.gameObject.GetComponentInParent<Slot>();
+
+            if (slot != null && slot.GetComponentInParent<Slot>() != null)
+                return true;
+            
+        }
+
+        return false;
+    } 
 
     public void TryAttack()
     {

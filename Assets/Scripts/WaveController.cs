@@ -165,6 +165,8 @@ public class WaveController : MonoBehaviour
         float damageMutli = damageMultiByWave.Evaluate(currentWave);
         float speedMutli = speedMultiByWave.Evaluate(currentWave);
 
+        float randomize = Random.Range(0.9f, 1.1f);
+
         EnemyHelath prefabHealth = originalPrefab.GetComponent<EnemyHelath>();
         EnemyHelath spawnedHealth = enemy.GetComponent<EnemyHelath>();
 
@@ -179,9 +181,9 @@ public class WaveController : MonoBehaviour
 
         if(prefabController != null && spawnedController != null)
         {
-            spawnedController.touchDamage = Mathf.Max(1, Mathf.RoundToInt(prefabController.touchDamage * damageMutli));
+            spawnedController.touchDamage = Mathf.Max(1, Mathf.RoundToInt(prefabController.touchDamage * damageMutli * randomize));
 
-            spawnedController.moveSpeed = Mathf.Max(0.1f, prefabController.moveSpeed * speedMutli);
+            spawnedController.moveSpeed = Mathf.Max(0.1f, prefabController.moveSpeed * speedMutli * randomize);
         }
     }
 

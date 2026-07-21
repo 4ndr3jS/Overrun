@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class ItemDragHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 
     Transform originalParent;
@@ -13,6 +13,10 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private InventoryController inventoryController;
 
     private Collider2D dropBoundary;
+
+    private Slot pressedSlot;
+    private bool didDrag;
+    private bool isDragging;
 
     void Start()
     {
@@ -32,6 +36,12 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (eventData.button != PointerEventData.InputButton.Left)
+            return;
+
+        didDrag = true;
+        isDragging = true;
+
         originalParent = transform.parent;
         transform.SetParent(transform.root);
         canvasGroup.blocksRaycasts = false;
@@ -40,11 +50,19 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!isDragging)
+            return; 
+
         transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!isDragging)
+            return;
+
+        isDragging = false;
+
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
@@ -119,6 +137,30 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        pressedSlot = GetComponentInParent<Slot>();
+        didDrag = false;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        Slot clickedSlot = pressedSlot;
+        pressedSlot = null;
+
+        if (didDrag)
+        {
+            didDrag = false;
+            return;
+        }
+
+        if (eventData.button == PointerEventData.InputButton.Left)
+            clickedSlot?.UseAsHotbarSlot();
+
+        else if (eventData.button == PointerEventData.InputButton.Right)
+            SplitStack();
+    }
+
     bool IsWithInInventory(Vector2 mousePosition)
     {
         RectTransform inventoryRect = originalParent.parent.GetComponent<RectTransform>();
@@ -188,15 +230,6 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         return origin;
-    }
-
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if(eventData.button == PointerEventData.InputButton.Right)
-        {
-            SplitStack();
-        }
     }
 
     private void SplitStack()

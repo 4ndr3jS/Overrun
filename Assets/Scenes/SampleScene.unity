@@ -102001,7 +102001,23 @@ MonoBehaviour:
   - prefab: {fileID: 3334008841247552969, guid: be777f42ed6daaa4ab70c67c45d8342f, type: 3}
     spawnWeight: 1
   - prefab: {fileID: 4242452591731040182, guid: cf5a262f54ea1114e8245074b3f238ce, type: 3}
-    spawnWeight: 2
+    spawnWeight: 1
+  - prefab: {fileID: 3400107723948332271, guid: ebe85d512913be946b48d0dbc8bd8de7, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 5330536387849444333, guid: acf7aa17cfa94d2449d63fffa40ee524, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 5414928836818110885, guid: 1f2641056cb48ef42992462a58be2e29, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 2953044916519786753, guid: 96c13fda8092ba94ea62fec79977d76c, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 8667563085322548344, guid: 92dbb18322f3b364a9c2ad2ea329f88b, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 5428935059893223690, guid: 7c531ecfc63e27142a3432f1b871309d, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 3531259562285438209, guid: 285c98aba44502f48a5a29e698936b8c, type: 3}
+    spawnWeight: 1
+  - prefab: {fileID: 8782196268020894092, guid: 1af1f798ec77957458d6821c070857e7, type: 3}
+    spawnWeight: 1
   spawnPoints:
   - {fileID: 1379317270}
   - {fileID: 2075156768}
