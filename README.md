@@ -4,8 +4,8 @@ Overrun is a top-down 2D survival game in which you enter a ruined desert, fight
 
 ## Demo
 
-- [Download the latest Windows build](https://github.com/4ndr3jS/Overrun/releases/latest)
-- [Watch the gameplay demo on YouTube](https://youtu.be/REPLACE_WITH_VIDEO_ID)
+- [Download the latest build](https://github.com/4ndr3jS/Overrun/releases/latest)
+- [Watch the gameplay demo on YouTube](https://youtu.be/watch?v=oXHWty-i8YU)
 
 ## What is the project?
 
@@ -33,7 +33,7 @@ Overrun was inspired by wave-survival games and top-down pixel RPGs. I especiall
 
 Overrun was created for the **Endless** theme.
 
-The game has no final wave or end. After the player defeats every monster in a wave, the next wave begins immediatley. Every new wave contains more enemies, while animation curves increase enemy health, damage, and movement speed as the wave number rises. The game continues forever as long as the player survives.
+It belongs in Endless because the game has no final wave or end. After the player defeats every monster in a wave, the next wave begins immediately. Every new wave contains more enemies, while animation curves increase enemy health, damage, and movement speed as the wave number rises. The game continues forever as long as the player survives.
 
 ## How to play
 
@@ -51,7 +51,7 @@ The game has no final wave or end. After the player defeats every monster in a w
 ## How to test it
 
 1. Open the [GitHub Release](https://github.com/4ndr3jS/Overrun/releases/latest).
-2. Download the Windows ZIP file from **Assets**.
+2. Download the ZIP file from **Assets**.
 3. Extract the ZIP.
 4. Run `Overrun.exe`.
 5. IF WINDOWS PROTECTION APPEARS: Don't worry it happens because the build is not digitally signed. To continue select **More info**, then **Run anyway**.
