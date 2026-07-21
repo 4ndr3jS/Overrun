@@ -52,6 +52,10 @@ public class Item : MonoBehaviour
     [Min(1f)]
     public float weaponStamina = 10f;
 
+    [Header("Bombb")]
+    public bool isBomb = false;
+    public GameObject bombPrefab;
+
     private Image iconImage;
 
     private void Awake()

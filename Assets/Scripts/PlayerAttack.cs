@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -76,8 +77,16 @@ public class PlayerAttack : MonoBehaviour
         if (PauseController.isGamePaused)
             return;
 
-        Item weapon = GetSelectedWeapon();
+        Item selectedItem = GetSelectedItem();
+        if(selectedItem != null && selectedItem.isBomb)
+        {
+            PlaceBomb(selectedItem);
+            return;
+        }
+
+        Item weapon = selectedItem != null && selectedItem.isWeapon ? selectedItem : null;
         float cooldown = weapon != null ? weapon.weaponCooldown : punchCooldown;
+
         float staminCost = weapon != null ? weapon.weaponStamina : punchStamina;
 
         if (Time.time < lastAttackTime + cooldown)
@@ -192,7 +201,7 @@ public class PlayerAttack : MonoBehaviour
             anim.runtimeAnimatorController = overrideController;
     }
 
-    private Item GetSelectedWeapon()
+    private Item GetSelectedItem()
     {
         if (hotbar == null || hotbar.hotbarPanel == null)
             return null;
@@ -205,8 +214,35 @@ public class PlayerAttack : MonoBehaviour
         if (slot == null || slot.currentItem == null)
             return null;
 
-        Item item = slot.currentItem.GetComponent<Item>();
+        return slot.currentItem.GetComponent<Item>();
+    }
+
+    private Item GetSelectedWeapon()
+    {
+        Item item = GetSelectedItem();
+
         return item != null && item.isWeapon ? item : null;
+    }
+
+    private void PlaceBomb(Item bomb)
+    {
+        if(bomb.bombPrefab == null)
+        {
+            return;
+        }
+
+        Instantiate(bomb.bombPrefab, transform.position, Quaternion.identity);
+
+        int slotIndex = hotbar.GetSelectedSlot();
+        Slot slot = hotbar.hotbarPanel.transform.GetChild(slotIndex).GetComponent<Slot>();
+
+        bomb.RemoveFromStack(1);
+
+        if(bomb.quantity <= 0)
+        {
+            slot.currentItem = null;
+            Destroy(bomb.gameObject);
+        }
     }
 
     private Vector2 GetFacingDirection()

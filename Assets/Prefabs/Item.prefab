@@ -128,7 +128,23 @@ MonoBehaviour:
   quantityText: {fileID: 8444439744813356879}
   buyPrice: 50
   sellPriceMultiplier: 0.5
-  isConsumable: 1
+  isConsumable: 0
+  consumableType: 0
+  restoreAmount: 50
+  isWeapon: 0
+  weaponDamage: 10
+  weaponRange: 0.8
+  weaponRadius: 0.4
+  weaponCooldown: 0.4
+  weaponHitDelay: 0.2
+  weaponAttackAngle: 90
+  attackUp: {fileID: 0}
+  attackDown: {fileID: 0}
+  attackLeft: {fileID: 0}
+  attackRight: {fileID: 0}
+  weaponStamina: 10
+  isBomb: 1
+  bombPrefab: {fileID: 3609312695592416267, guid: a61cecf31338aaf4a8e20bb00624b09c, type: 3}
 --- !u!212 &-8757188319111990450
 SpriteRenderer:
   serializedVersion: 2
